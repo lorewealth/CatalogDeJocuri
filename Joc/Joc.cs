@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ProiectCatalogDeJocuri
+namespace DespreJoc
 {
     public class Joc
     {
@@ -23,18 +22,9 @@ namespace ProiectCatalogDeJocuri
             this.Pret = Pret;
             this.Genre = Genre;
             this.Platforme = Platforme;
-            if (Rate >= 0.0 && Rate <= 10.0) 
-            {
-                this.Rate = Rate;
-            }
-            else
-            {
-                Console.WriteLine("Rate este setat incorect!");
-                Rate = 0.0;
-            }
+            this.Rate = Rate;
             this.Publicatori = Publicatori;
             this.Dezvoltatori = Dezvoltatori;
-
         }
 
         public void getGenre()
@@ -61,9 +51,9 @@ namespace ProiectCatalogDeJocuri
 
         public void getPublicatori()
         {
-            if(Publicatori.Count > 0)
+            if (Publicatori.Count > 0)
             {
-                foreach(var el in Publicatori)
+                foreach (var el in Publicatori)
                 {
                     Console.WriteLine($"    {el}");
                 }
@@ -76,9 +66,9 @@ namespace ProiectCatalogDeJocuri
 
         public void getDezvoltatori()
         {
-            if(Dezvoltatori.Count > 0)
+            if (Dezvoltatori.Count > 0)
             {
-                foreach(var el in Dezvoltatori)
+                foreach (var el in Dezvoltatori)
                 {
                     Console.WriteLine($"    {el}");
                 }
@@ -89,19 +79,41 @@ namespace ProiectCatalogDeJocuri
             }
         }
 
-        public void getInfo()
+        public string getInfo()
         {
-            Console.WriteLine($"Detalii jocului: {Denumirea}");
-            Console.WriteLine($"Pretul: {Pret}");
-            Console.WriteLine($"Rating: {Rate}/10");
-            Console.WriteLine("Genre: ");
-            getGenre();
-            Console.WriteLine("Platforme: ");
-            getPlatforme();
-            Console.WriteLine("Publicatori: ");
-            getPublicatori();
-            Console.WriteLine("Dezvoltatori: ");
-            getDezvoltatori();
+            string info = $"Detalii jocului: {Denumirea}\nPretul: {Pret}\nRating: {Rate}/10\nGenre: \n";
+
+            if (Genre.Count != 0 && Platforme.Count != 0 && Publicatori.Count != 0 && Dezvoltatori.Count != 0)
+            {
+                foreach (string el in Genre)
+                {
+                    info += "    " + el + "\n";
+                }
+
+                info += "Platforme:\n";
+                foreach(string el in Platforme)
+                {
+                    info += "    " + el + "\n";
+                }
+
+                info += "Publicatori:\n";
+                foreach(string el in Publicatori)
+                {
+                    info += "    " + el + "\n";
+                }
+
+                info += "Dezvoltatori:\n";
+                foreach(string el in Dezvoltatori)
+                {
+                    info += "    " + el + "\n";
+                }
+            }
+            else
+            {
+                info = "Nu ati introdus nici o joaca";
+            }
+            
+            return info;
         }
 
     }
