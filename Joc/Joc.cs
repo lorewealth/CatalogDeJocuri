@@ -1,120 +1,71 @@
 ﻿using System;
+using EnumGestionare;
+using System.IO;
 
 namespace DespreJoc
 {
     public class Joc
     {
         //variabile
-        public int Id { get; private set; }
+        public int InternalId { get; private set; }
+        //public int ExternalId { get; private set; }
         public string Denumirea { get; private set; }
         public double Pret { get; private set; }
         public double Rate { get; private set; }
-        public List<string> Genre = new List<string>();
-        public List<string> Platforme = new List<string>();
-        public List<string> Publicatori = new List<string>();
-        public List<string> Dezvoltatori = new List<string>();
+        public List<string> Genre { get; private set; }
+        public PlatformeDisponibile Platforme { get; private set; }
+        public List<string> Editori { get; private set; }
+        public List<string> Dezvoltatori { get; private set; }
+        public RatingVarsta RatingVarsta { get; private set; }
 
         //constructor
-        public Joc(int Id, string Denumirea, double Pret, List<string> Genre, List<string> Platforme, List<string> Publicatori, List<string> Dezvoltatori, double Rate)
+        public Joc(int InternalId, string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<string> Editori, List<string> Dezvoltatori, double Rate, RatingVarsta RatingVarsta)
         {
-            this.Id = Id;
+            this.InternalId = InternalId;
             this.Denumirea = Denumirea;
             this.Pret = Pret;
             this.Genre = Genre;
             this.Platforme = Platforme;
             this.Rate = Rate;
-            this.Publicatori = Publicatori;
+            this.Editori = Editori;
             this.Dezvoltatori = Dezvoltatori;
+            this.RatingVarsta = RatingVarsta;
         }
 
-        public void getGenre()
+        public string GetGenre()
         {
-            if (Genre.Count > 0)
-            {
-                foreach (var el in Genre)
-                {
-                    Console.WriteLine($"    {el}");
-                }
-            }
+            return string.Join(" ", Genre);
         }
 
-        public void getPlatforme()
+        public string GetPlatforme()
         {
-            if (Platforme.Count > 0)
-            {
-                foreach (var el in Platforme)
-                {
-                    Console.WriteLine($"    {el}");
-                }
-            }
+            return Platforme.ToString();
         }
 
-        public void getPublicatori()
+        public string GetEditori()
         {
-            if (Publicatori.Count > 0)
-            {
-                foreach (var el in Publicatori)
-                {
-                    Console.WriteLine($"    {el}");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Nu a fost initializat publicatorii!");
-            }
+            return string.Join(" ", Editori);
         }
 
-        public void getDezvoltatori()
-        {
-            if (Dezvoltatori.Count > 0)
-            {
-                foreach (var el in Dezvoltatori)
-                {
-                    Console.WriteLine($"    {el}");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Nu a fost initializat dezvolatorii!");
-            }
+        public string GetDezvoltatori()
+        {            
+            return string.Join(" ", Dezvoltatori);
         }
 
-        public string getInfo()
+        public string GetRatingVarsta()
         {
-            string info = $"Detalii jocului: {Denumirea}\nPretul: {Pret}\nRating: {Rate}/10\nGenre: \n";
+            return RatingVarsta.ToString();
+        }
 
-            if (Genre.Count != 0 && Platforme.Count != 0 && Publicatori.Count != 0 && Dezvoltatori.Count != 0)
-            {
-                foreach (string el in Genre)
-                {
-                    info += "    " + el + "\n";
-                }
-
-                info += "Platforme:\n";
-                foreach(string el in Platforme)
-                {
-                    info += "    " + el + "\n";
-                }
-
-                info += "Publicatori:\n";
-                foreach(string el in Publicatori)
-                {
-                    info += "    " + el + "\n";
-                }
-
-                info += "Dezvoltatori:\n";
-                foreach(string el in Dezvoltatori)
-                {
-                    info += "    " + el + "\n";
-                }
-            }
-            else
-            {
-                info = "Nu ati introdus nici o joaca";
-            }
-            
+        public string GetInfo()
+        {
+            string info = $"Detalii jocului: {Denumirea}\nPretul: {Pret}\nRating: {Rate}/10";
+                info += "\nGenre:\n\t" + string.Join("\n\t", Genre);
+                info += "\nPlatforme:\n\t" + Platforme.ToString().Replace(", ", "\n\t");
+                info += "\nDezvoltatori:\n\t" + string.Join("\n\t", Dezvoltatori);
+                info += "\nPublicatori:\n\t" + string.Join("\n\t", Editori);
+                info += "\nRating de Varsta:\n\t" + RatingVarsta.ToString();
             return info;
         }
-
     }
 }

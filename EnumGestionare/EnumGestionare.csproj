@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CategoriiDisponibile\EnumGestionare.csproj" />
-    <ProjectReference Include="..\EnumGestionare\EnumGestionare.csproj" />
-  </ItemGroup>
-
 </Project>

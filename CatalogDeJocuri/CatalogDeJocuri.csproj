@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CategoriiDisponibile\EnumGestionare.csproj" />
+    <ProjectReference Include="..\EnumGestionare\EnumGestionare.csproj" />
     <ProjectReference Include="..\GestionareaJocurilor\GestionareaJocurilor.csproj" />
     <ProjectReference Include="..\Joc\DespreJoc.csproj" />
   </ItemGroup>

@@ -1,97 +1,54 @@
 ﻿using DespreJoc;
+using EnumGestionare;
 
 namespace GestionareaJocurilor
 {
     public class GestiuneaJoc
     {
-        public List<Joc> Jocuri;
+        public List<Joc> Jocuri { get; private set; }
+        public int CurrentId { get; private set; } = 0;
         public Joc JocNou = null;
 
         public GestiuneaJoc()
         {
             Jocuri = new List<Joc>();
         }
-
-        public Joc GetJoc()
+        public void IncrementInternalId()
         {
-            Console.Write("Denumirea jocului cautat: ");
-            string tDenumirea = Console.ReadLine().ToUpper();
-            return Jocuri.Find(jocul => jocul.Denumirea.ToUpper() == tDenumirea);
+            CurrentId++;
         }
-        public List<Joc> GetJocuri()
+
+        public Joc GetJoc(string tDenumirea)
         {
-            Console.Write("Sunt disponbile aceste criterii: [Genre], [Dezvoltatori], [Publicatori], [Platforme]\nDupa ce criteriu vreti sa cautati jocul: ");
-            string criteriu = Console.ReadLine().ToUpper();
+            return Jocuri.Find(jocul => jocul.Denumirea.Equals(tDenumirea, StringComparison.OrdinalIgnoreCase));
+        }
+        public List<Joc> GetJocuri(string categoria, string criteriul)
+        {
             List<Joc> JocuriGasiti = new List<Joc>();
-            switch (criteriu) 
+
+            switch (categoria) 
             {
                 case "GENRE":
-                    Console.Write("Dupa care genru vreti sa gasiti: ");
-                    string genrul = Console.ReadLine().ToUpper();
-
-                    foreach (Joc elem in Jocuri)
-                    {
-                        foreach (string genr in elem.Genre)
-                        {
-                            if(genr.ToUpper() == genrul)
-                            {
-                                JocuriGasiti.Add(elem);
-                            }
-                        }
-                    }
+                    JocuriGasiti = Jocuri.Where(joc => joc.Genre.Any(subgen => subgen.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
                     break;
                 case "DEZVOLTATORI":
-                    Console.Write("Dupa care dezvoltator vreti sa gasiti: ");
-                    string dezvoltator = Console.ReadLine().ToUpper();
-
-                    foreach (Joc elem in Jocuri)
-                    {
-                        foreach (string dezv in elem.Dezvoltatori)
-                        {
-                            if (dezv.ToUpper() == dezvoltator)
-                            {
-                                JocuriGasiti.Add(elem);
-                            }
-                        }
-                    }
+                    JocuriGasiti = Jocuri.Where(joc => joc.Dezvoltatori.Any(subdez => subdez.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
                     break;
-                case "PUBLICATORI":
-                    Console.Write("Dupa care publicator vreti sa gasiti: ");
-                    string publicator = Console.ReadLine().ToUpper();
-
-                    foreach (Joc elem in Jocuri)
-                    {
-                        foreach (string publ in elem.Publicatori)
-                        {
-                            if (publ.ToUpper() == publicator)
-                            {
-                                JocuriGasiti.Add(elem);
-                            }
-                        }
-                    }
+                case "EDITORI":
+                    JocuriGasiti = Jocuri.Where(joc => joc.Editori.Any(subpub => subpub.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
                     break;
                 case "PLATFORME":
-                    Console.Write("Dupa care platforma vreti sa gasiti: ");
-                    string platforma = Console.ReadLine().ToUpper();
-
-                    foreach (Joc elem in Jocuri)
+                    if (Enum.TryParse<PlatformeDisponibile>(criteriul, true, out PlatformeDisponibile res))
                     {
-                        foreach (string platf in elem.Platforme)
-                        {
-                            if (platf.ToUpper() == platforma)
-                            {
-                                JocuriGasiti.Add(elem);
-                            }
-                        }
+                        JocuriGasiti = Jocuri.Where(joc => joc.Platforme.HasFlag(res)).ToList();
                     }
                     break;
-                default:
-                    Console.WriteLine("Nu ati ales optiunea corecta!");
+                case "VARSTA":
+                    JocuriGasiti = Jocuri.Where(joc => joc.RatingVarsta.ToString().Equals(criteriul, StringComparison.OrdinalIgnoreCase)).ToList();
                     break;
+                default: break;
             }
             return JocuriGasiti;
         }
-
-        
     }
 }

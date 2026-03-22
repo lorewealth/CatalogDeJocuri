@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DespreJoc", "..\Joc\DespreJ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionareaJocurilor", "..\GestionareaJocurilor\GestionareaJocurilor.csproj", "{2495EBE0-016F-443D-B199-C3599DCF8BE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumGestionare", "..\EnumGestionare\EnumGestionare.csproj", "{8C2E4B91-B3CA-389F-BACD-C9172C108EB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{2495EBE0-016F-443D-B199-C3599DCF8BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2495EBE0-016F-443D-B199-C3599DCF8BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2495EBE0-016F-443D-B199-C3599DCF8BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C2E4B91-B3CA-389F-BACD-C9172C108EB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C2E4B91-B3CA-389F-BACD-C9172C108EB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C2E4B91-B3CA-389F-BACD-C9172C108EB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C2E4B91-B3CA-389F-BACD-C9172C108EB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

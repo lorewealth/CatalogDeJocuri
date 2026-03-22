@@ -1,6 +1,7 @@
 ﻿using System;
 using DespreJoc;
 using GestionareaJocurilor;
+using EnumGestionare;
 
 namespace ProiectCatalogDeJocuri
 {
@@ -25,105 +26,130 @@ namespace ProiectCatalogDeJocuri
 
                 Console.Write("Selectati: ");
                 optiunea = Console.ReadLine().ToUpper();
-
-                switch (optiunea)
+                try
                 {
-                    case "C":
-                        Catalog1.JocNou = Citirea();
-                        break;
-                    case "A":
-                        if(Catalog1.JocNou == null)
-                        {
-                            Console.WriteLine("Nu ati introdus nici o joaca");
+                    switch (optiunea)
+                    {
+                        case "C":
+                            Catalog1.JocNou = Citirea(Catalog1);
                             break;
-                        }
-                        Console.WriteLine(Catalog1.JocNou.getInfo());
-                        break;
-                    case "S":
-                        if (Catalog1.JocNou == null)
-                        {
-                            Console.WriteLine("Nu ati introdus un joc nou");
+                        case "A":
+                            if (Catalog1.JocNou == null)
+                            {
+                                throw new Exception("Nu ati introdus nici o joaca");
+                            }
+                            Console.WriteLine(Catalog1.JocNou.GetInfo());
                             break;
-                        }
+                        case "S":
+                            if (Catalog1.JocNou == null)
+                            {
+                                throw new Exception("Nu ati introdus un joc nou");
+                            }
 
-                        Catalog1.Jocuri.Add(Catalog1.JocNou);
-                        Console.WriteLine("Joaca a fost salvat cu succes");
+                            Catalog1.Jocuri.Add(Catalog1.JocNou);
+                            Console.WriteLine("Joaca a fost salvat cu succes");
 
-                        Catalog1.JocNou = null;
-                        break;
-                    case "L":
-                        if(Catalog1.Jocuri.Count == 0)
-                        {
-                            Console.WriteLine("Nu ati introdus nici un joc");
+                            Catalog1.JocNou = null;
                             break;
-                        }
+                        case "L":
+                            if (Catalog1.Jocuri.Count == 0)
+                            {
+                                throw new Exception("Nu ati introdus nici un joc");
+                            }
 
-                        foreach(Joc jocul in Catalog1.Jocuri)
-                        {
-                            Console.WriteLine(jocul.Denumirea);
-                        }
+                            foreach (Joc jocul in Catalog1.Jocuri)
+                            {
+                                Console.WriteLine(jocul.Denumirea);
+                            }
 
-                        break;
-                    case "F":
-                        Joc tJoc = Catalog1.GetJoc();
-                        if(tJoc == null)
-                        {
-                            Console.WriteLine("Nu a fost gasit acest joc");
                             break;
-                        }
-                        Console.WriteLine("Joaca a fost gasita: ");
-                        Console.WriteLine(tJoc.getInfo());
-                        break;
-                    case "M":
-                        List<Joc> tJocuriGasite = Catalog1.GetJocuri();
-                        if(tJocuriGasite.Count == 0)
-                        {
-                            Console.WriteLine("Nu a fost gasit nici o joaca dupa acest criteriul");
+                        case "F":
+                            Console.Write("Denumirea jocului cautat: ");
+                            Joc tJoc = Catalog1.GetJoc(Console.ReadLine().Trim().ToUpper());
+
+                            if (tJoc == null)
+                            {
+                                throw new Exception("Joaca nu a fost gasita");
+                            }
+
+                            Console.WriteLine("Joсul a fost gasit: ");
+                            Console.WriteLine(tJoc.GetInfo());
                             break;
-                        }
-                        Console.WriteLine("Au fost gasite aceste jocuri: ");
-                        foreach (Joc elem in tJocuriGasite)
-                        {
-                            Console.WriteLine(elem.Denumirea);
-                        }
-                        break;
-                    case "X":
-                        Console.WriteLine("Iesirea din aplicatie...");
-                        break;
-                    default:
-                        Console.WriteLine("Nu ati selectat corect!");
-                        break;
+                        case "M":
+                            var categoriiDisponibile = Enum.GetValues<Categorii>();
+                            int categoriaSelectata = 0;
+
+                            Console.WriteLine("Sunt disponbile aceste categorii: ");
+                            foreach (var Categoria in categoriiDisponibile)
+                            {
+                                Console.WriteLine($"{(int)Categoria} - [{Categoria}]");
+                            }
+
+                            do
+                            {
+                                Console.Write("Selectati categoria de la 1-5: ");
+                                int.TryParse(Console.ReadLine(), out categoriaSelectata);
+                            }
+                            while (categoriaSelectata <= 0 || categoriaSelectata > 5);
+                            
+                            string categoriaStr = ((Categorii)categoriaSelectata).ToString().ToUpper();
+
+                            Console.Write($"In {categoriaStr} dupa ce criteriu sa caute: ");
+                            string criteriul = Console.ReadLine().Trim().ToUpper();
+                            
+                            List<Joc> tJocuriGasite = Catalog1.GetJocuri(categoriaStr, criteriul);
+
+                            if (tJocuriGasite.Count == 0)
+                            {
+                                throw new Exception($"Nu a fost gasit joaca in {categoriaStr} cu criteriul {criteriul}");
+                            }
+
+                            Console.WriteLine("Au fost gasite aceste jocuri: ");
+                            foreach (Joc elem in tJocuriGasite)
+                            {
+                                Console.WriteLine(elem.Denumirea);
+                            }
+
+                            break;
+                        case "X":
+                            Console.WriteLine("Iesirea din aplicatie...");
+                            break;
+                        default:
+                            Console.WriteLine("Nu ati selectat corect!");
+                            break;
+                    }
+                } 
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
                 }
-            }
+        }
             while (optiunea != "X");
         }
 
 
-        static Joc Citirea()
+        static Joc Citirea(GestiuneaJoc Catalog)
         {
-            int id = 0;
-            string denumirea;
+            Catalog.IncrementInternalId();
+            string denumirea = string.Empty;
             double pret = 0.0;
             double rate = 0.0;
             List<string> genre = new List<string>();
-            List<string> platforme = new List<string>();
-            List<string> publicatori = new List<string>();
+            PlatformeDisponibile platforme = 0;
+            List<string> editori = new List<string>();
             List<string> dezvoltatori = new List<string>(); 
             int nrDeGenre = 0;
             int nrDePlatforme = 0;
             int nrDeDezvoltatori = 0;
-            int nrDePublicatori = 0;
+            int nrDeEditori = 0;
+            RatingVarsta varsta = 0;
 
-            Console.Write("Denumirea jocului: ");
-            denumirea = Console.ReadLine();
-
-            bool corectId = false;
             do
             {
-                Console.Write("Id jocului: ");
-                corectId = int.TryParse(Console.ReadLine(), out id);
-            }
-            while (id < 0 || corectId == false);
+                Console.Write("Denumirea jocului: ");
+                denumirea = Console.ReadLine();
+            } 
+            while (denumirea == string.Empty) ;
 
             bool corectPret = false;
             do
@@ -133,13 +159,12 @@ namespace ProiectCatalogDeJocuri
             }
             while (pret < 0 || corectPret == false);
 
-            bool corectRate = false;
             do
             {
                 Console.Write("Rata(Rating) jocului de la 1-10: ");
-                corectRate = double.TryParse(Console.ReadLine(), out rate);
+                double.TryParse(Console.ReadLine(), out rate);
             }
-            while (rate < 1 || rate > 10 || corectRate == false);
+            while (rate < 1 || rate > 10);
 
             do
             {
@@ -150,8 +175,24 @@ namespace ProiectCatalogDeJocuri
 
             for (int i = 0; i < nrDeGenre; i++)
             {
-                Console.Write($"Genrul[{i + 1}]: ");
-                genre.Add(Console.ReadLine());
+                string str = string.Empty;
+                do
+                {
+                    Console.Write($"Genrul[{i + 1}]: ");
+                    str = Console.ReadLine();
+                }
+                while (genre.Contains(str));
+
+                genre.Add(str);
+            }
+
+            var PlatformeDisponibileList = Enum.GetValues<PlatformeDisponibile>();
+            Console.WriteLine("Sunt disponibile aceste platforme: ");
+
+            int contor = 1;
+            foreach (var elem in PlatformeDisponibileList)
+            {
+                Console.WriteLine($"{contor++} - {elem}");
             }
 
             do
@@ -159,12 +200,21 @@ namespace ProiectCatalogDeJocuri
                 Console.Write("Pe cate platforme joaca este disponibila: ");
                 int.TryParse(Console.ReadLine(), out nrDePlatforme);
             }
-            while (nrDePlatforme <= 0);
+            while (nrDePlatforme <= 0 || nrDePlatforme > 4);
 
+            Console.WriteLine("Selectati de la 1 la 4: ");
             for (int i = 0; i < nrDePlatforme; i++)
             {
-                Console.Write($"Platforma[{i + 1}]: ");
-                platforme.Add(Console.ReadLine());
+                int platformaSelectata = 0;
+                do
+                {
+                    Console.Write($"Platforma[{i + 1}]: ");
+                    int.TryParse(Console.ReadLine(), out platformaSelectata);
+                }
+                while (platformaSelectata <= 0 || platformaSelectata > 4);
+
+                PlatformeDisponibile Platforma = (PlatformeDisponibile) (1 << (platformaSelectata - 1));
+                platforme |= Platforma;
             }
 
             do
@@ -176,24 +226,54 @@ namespace ProiectCatalogDeJocuri
 
             for (int i = 0; i < nrDeDezvoltatori; i++)
             {
-                Console.Write($"Dezvoltator[{i + 1}]: ");
-                dezvoltatori.Add(Console.ReadLine());
+                string dezvoltator = string.Empty;
+                do
+                {
+                    Console.Write($"Dezvoltator[{i + 1}]: ");
+                    dezvoltator = Console.ReadLine();
+                }
+                while (dezvoltator == string.Empty || dezvoltatori.Contains(dezvoltator));
+
+                dezvoltatori.Add(dezvoltator);
+            }
+            do
+            {
+                Console.Write("Cati editori au publicat joaca: ");
+                int.TryParse(Console.ReadLine(), out nrDeEditori);
+            }
+            while (nrDeEditori <= 0);
+
+            for (int i = 0; i < nrDeEditori; i++)
+            {
+                string editor = string.Empty;
+                do
+                {
+                    Console.Write($"Editor[{i + 1}]: ");
+                    editor = Console.ReadLine();
+                }
+                while (editor == string.Empty || editori.Contains(editor));
+                
+                editori.Add(editor);
+            }
+
+            int varstaSelectata = 0;
+            var RatingVarstaList = Enum.GetValues<RatingVarsta>();
+            Console.WriteLine("Sunt disponibile aceste rating-uri de varsta");
+            foreach(RatingVarsta rating in RatingVarstaList)
+            {
+                Console.WriteLine($"{(int)rating} - [{rating}]");
             }
 
             do
             {
-                Console.Write("Cate publicatori au publicat joaca: ");
-                int.TryParse(Console.ReadLine(), out nrDePublicatori);
+                Console.Write("Ce Rating de varsta are joaca: ");
+                int.TryParse(Console.ReadLine(), out varstaSelectata);
             }
-            while (nrDePublicatori <= 0);
+            while (!Enum.IsDefined(typeof(RatingVarsta), varstaSelectata));
 
-            for (int i = 0; i < nrDePublicatori; i++)
-            {
-                Console.Write($"Publicator[{i + 1}]: ");
-                publicatori.Add(Console.ReadLine());
-            }
+            varsta = (RatingVarsta)varstaSelectata;
 
-            return new Joc(id, denumirea, pret, genre, platforme, publicatori, dezvoltatori, rate);
+            return new Joc(Catalog.CurrentId, denumirea, pret, genre, platforme, editori, dezvoltatori, rate, varsta);
         }
     }
 }
