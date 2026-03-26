@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionareaJocurilor", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnumGestionare", "..\EnumGestionare\EnumGestionare.csproj", "{8C2E4B91-B3CA-389F-BACD-C9172C108EB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamAPI", "..\SteamAPI\SteamAPI.csproj", "{FE1A8EFA-3863-4281-AB04-CC84391FD0B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{8C2E4B91-B3CA-389F-BACD-C9172C108EB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C2E4B91-B3CA-389F-BACD-C9172C108EB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C2E4B91-B3CA-389F-BACD-C9172C108EB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE1A8EFA-3863-4281-AB04-CC84391FD0B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE1A8EFA-3863-4281-AB04-CC84391FD0B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE1A8EFA-3863-4281-AB04-CC84391FD0B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE1A8EFA-3863-4281-AB04-CC84391FD0B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

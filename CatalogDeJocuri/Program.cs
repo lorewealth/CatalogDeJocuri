@@ -2,15 +2,17 @@
 using DespreJoc;
 using GestionareaJocurilor;
 using EnumGestionare;
+using SteamAPI;
 
 namespace ProiectCatalogDeJocuri
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             string optiunea;
             GestiuneaJoc Catalog1 = new GestiuneaJoc();
+            SteamAPIs API1 = new SteamAPIs();
 
             do
             {
@@ -21,6 +23,7 @@ namespace ProiectCatalogDeJocuri
                 Console.WriteLine("L. Afisarea listei jocurilor");
                 Console.WriteLine("F. Cautarea jocului");
                 Console.WriteLine("M. Cautarea jocurilor dupa un criteriu");
+                Console.WriteLine("Q. Cautarea jocului in Steam");
                 Console.WriteLine("X. Iesirea din aplicatia");
                 Console.WriteLine("------------------------------------");
 
@@ -31,7 +34,7 @@ namespace ProiectCatalogDeJocuri
                     switch (optiunea)
                     {
                         case "C":
-                            Catalog1.JocNou = Citirea(Catalog1);
+                            Catalog1.SetJocNou(Citirea(Catalog1));
                             break;
                         case "A":
                             if (Catalog1.JocNou == null)
@@ -46,10 +49,10 @@ namespace ProiectCatalogDeJocuri
                                 throw new Exception("Nu ati introdus un joc nou");
                             }
 
-                            Catalog1.Jocuri.Add(Catalog1.JocNou);
+                            Catalog1.AddJoc(Catalog1.JocNou);
                             Console.WriteLine("Joaca a fost salvat cu succes");
 
-                            Catalog1.JocNou = null;
+                            Catalog1.ResetJocNou();
                             break;
                         case "L":
                             if (Catalog1.Jocuri.Count == 0)
@@ -59,7 +62,7 @@ namespace ProiectCatalogDeJocuri
 
                             foreach (Joc jocul in Catalog1.Jocuri)
                             {
-                                Console.WriteLine(jocul.Denumirea);
+                                Console.WriteLine($"[{jocul.InternalId}] {jocul.Denumirea}");
                             }
 
                             break;
@@ -111,6 +114,38 @@ namespace ProiectCatalogDeJocuri
                             }
 
                             break;
+                        case "Q":
+                            string denumirea = string.Empty;
+                            do
+                            {
+                                Console.Write("Denumirea jocului: ");
+                                denumirea = Console.ReadLine();
+                            }
+                            while (denumirea == string.Empty);
+
+                            await API1.CautareaJoculuiSteamAPI(denumirea);
+
+                            if(API1.JocCautat.Denumirea == "NECUNOSCUT")
+                            {
+                                throw new Exception("Joaca nu a fost gasita");
+                            }
+
+                            Console.WriteLine("Joaca a fost gasita");
+                            Console.WriteLine(API1.JocCautat.GetInfo());
+
+                            foreach (Joc jocul in Catalog1.Jocuri)
+                            {
+                                if (jocul.Denumirea == API1.JocCautat.Denumirea)
+                                {
+                                    API1.ResetJocCautat(); 
+                                    throw new Exception("Aceasta joaca este deja prezenta in lista");
+                                }
+                            }
+                            Catalog1.SetJocNou(API1.JocCautat);
+
+                            API1.ResetJocCautat();
+
+                            break;
                         case "X":
                             Console.WriteLine("Iesirea din aplicatie...");
                             break;
@@ -130,7 +165,6 @@ namespace ProiectCatalogDeJocuri
 
         static Joc Citirea(GestiuneaJoc Catalog)
         {
-            Catalog.IncrementInternalId();
             string denumirea = string.Empty;
             double pret = 0.0;
             double rate = 0.0;
@@ -192,6 +226,7 @@ namespace ProiectCatalogDeJocuri
             int contor = 1;
             foreach (var elem in PlatformeDisponibileList)
             {
+                if ((int)elem == 0) continue;
                 Console.WriteLine($"{contor++} - {elem}");
             }
 
@@ -273,7 +308,7 @@ namespace ProiectCatalogDeJocuri
 
             varsta = (RatingVarsta)varstaSelectata;
 
-            return new Joc(Catalog.CurrentId, denumirea, pret, genre, platforme, editori, dezvoltatori, rate, varsta);
+            return new Joc(denumirea, pret, genre, platforme, editori, dezvoltatori, rate, varsta);
         }
     }
 }

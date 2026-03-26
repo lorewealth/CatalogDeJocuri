@@ -1,13 +1,15 @@
-﻿using DespreJoc;
+﻿using System;
+using DespreJoc;
 using EnumGestionare;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GestionareaJocurilor
 {
     public class GestiuneaJoc
     {
         public List<Joc> Jocuri { get; private set; }
-        public int CurrentId { get; private set; } = 0;
-        public Joc JocNou = null;
+        public int CurrentId { get; private set; } = 1;
+        public Joc JocNou { get; private set; }
 
         public GestiuneaJoc()
         {
@@ -16,6 +18,21 @@ namespace GestionareaJocurilor
         public void IncrementInternalId()
         {
             CurrentId++;
+        }
+        public void AddJoc(Joc joc)
+        {
+            joc.setId(CurrentId++);
+            Jocuri.Add(joc);
+        }
+
+        public void ResetJocNou()
+        {
+            JocNou = null;
+        }
+
+        public void SetJocNou(Joc joc)
+        {
+            JocNou = joc;
         }
 
         public Joc GetJoc(string tDenumirea)
@@ -44,7 +61,7 @@ namespace GestionareaJocurilor
                     }
                     break;
                 case "VARSTA":
-                    JocuriGasiti = Jocuri.Where(joc => joc.RatingVarsta.ToString().Equals(criteriul, StringComparison.OrdinalIgnoreCase)).ToList();
+                    JocuriGasiti = Jocuri.Where(joc => joc.VarstaNecesara.ToString().Equals(criteriul, StringComparison.OrdinalIgnoreCase)).ToList();
                     break;
                 default: break;
             }

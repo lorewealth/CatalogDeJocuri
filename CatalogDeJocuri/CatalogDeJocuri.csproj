@@ -12,6 +12,7 @@
     <ProjectReference Include="..\EnumGestionare\EnumGestionare.csproj" />
     <ProjectReference Include="..\GestionareaJocurilor\GestionareaJocurilor.csproj" />
     <ProjectReference Include="..\Joc\DespreJoc.csproj" />
+    <ProjectReference Include="..\SteamAPI\SteamAPI.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,6 +11,7 @@
     [Flags]
     public enum PlatformeDisponibile
     {
+        None = 0,
         Steam = 1 << 0,
         Epic = 1 << 1,
         GOG = 1 << 2,
@@ -19,6 +20,7 @@
 
     public enum RatingVarsta
     {
+        PEGI0 = 0,
         PEGI3 = 1,
         PEGI7 = 2,
         PEGI12 = 3,
