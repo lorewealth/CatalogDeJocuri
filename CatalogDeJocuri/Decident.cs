@@ -1,6 +1,6 @@
 ﻿using System;
 using StocareJocurilor;
-using System.Configuration; // Ensure you have a reference to System.Configuration.dll
+using System.Configuration;
 
 namespace CatalogDeJocuri
 {
