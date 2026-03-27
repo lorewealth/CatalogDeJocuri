@@ -1,28 +1,40 @@
 ﻿using DespreJoc;
 using EnumGestionare;
 
-namespace GestionareaJocurilor
+namespace StocareJocurilor
 {
-    public class GestiuneaJoc
+    public class GestiuneaJocMemorie : IStocare
     {
         public List<Joc> Jocuri { get; private set; }
-        public int CurrentId { get; private set; } = 0;
-        public Joc JocNou = null;
 
-        public GestiuneaJoc()
+        public GestiuneaJocMemorie()
         {
             Jocuri = new List<Joc>();
         }
-        public void IncrementInternalId()
+
+        public int GetNextIdJoc()
         {
-            CurrentId++;
+            if (Jocuri.Count == 0) return 1;
+            return Jocuri.Last().InternalId + 1;
+        }
+
+        public void AddJoc(Joc joc)
+        {
+            joc.setInternalId(GetNextIdJoc());
+            Jocuri.Add(joc);
         }
 
         public Joc GetJoc(string tDenumirea)
         {
             return Jocuri.Find(jocul => jocul.Denumirea.Equals(tDenumirea, StringComparison.OrdinalIgnoreCase));
         }
-        public List<Joc> GetJocuri(string categoria, string criteriul)
+
+        public List<Joc> GetJocuri()
+        {
+            return Jocuri;
+        }
+
+        public List<Joc> GetJocuriCautare(string categoria, string criteriul)
         {
             List<Joc> JocuriGasiti = new List<Joc>();
 
@@ -44,7 +56,7 @@ namespace GestionareaJocurilor
                     }
                     break;
                 case "VARSTA":
-                    JocuriGasiti = Jocuri.Where(joc => joc.RatingVarsta.ToString().Equals(criteriul, StringComparison.OrdinalIgnoreCase)).ToList();
+                    JocuriGasiti = Jocuri.Where(joc => joc.Varsta.ToString().Equals(criteriul, StringComparison.OrdinalIgnoreCase)).ToList();
                     break;
                 default: break;
             }

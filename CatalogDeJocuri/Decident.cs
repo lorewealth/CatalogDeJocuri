@@ -1,0 +1,34 @@
+﻿using System;
+using StocareJocurilor;
+using System.Configuration; // Ensure you have a reference to System.Configuration.dll
+
+namespace CatalogDeJocuri
+{
+    public static class Decident
+    {
+        private const string FORMAT = "FormatSalvare";
+        private const string NUME_FISIER = "NumeFisier";
+
+        public static IStocare PrelucrareaDatelor()
+        {
+            string formatSalvare = ConfigurationManager.AppSettings[FORMAT];//se va prelua valoarea a cheielui FORMAT
+            string numeFisier = ConfigurationManager.AppSettings[NUME_FISIER];//se ia valoarea de la cheie NUME_FISIER in App.config
+
+            string locatieSolutie = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string locatieCompleta = locatieSolutie + "//" + numeFisier;
+
+            if (formatSalvare != null)
+            {
+                switch (formatSalvare)
+                {
+                    case "memorie":
+                        return new GestiuneaJocMemorie();
+                    case "txt":
+                        return new GestiuneaJocFisierText(locatieCompleta + '.' + formatSalvare);
+                }
+            }
+            return null;
+        }
+
+    }
+}
