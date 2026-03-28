@@ -1,7 +1,8 @@
 ﻿using System;
 using DespreJoc;
-using GestionareaJocurilor;
+using StocareJocurilor;
 using EnumGestionare;
+using CatalogDeJocuri;
 
 namespace ProiectCatalogDeJocuri
 {
@@ -10,7 +11,10 @@ namespace ProiectCatalogDeJocuri
         static void Main(string[] args)
         {
             string optiunea;
-            GestiuneaJoc Catalog1 = new GestiuneaJoc();
+            IStocare Catalog = Decident.PrelucrareaDatelor();
+
+            Joc JocNou = null;
+            List<Joc> Jocuri = new List<Joc>();
 
             do
             {
@@ -21,6 +25,7 @@ namespace ProiectCatalogDeJocuri
                 Console.WriteLine("L. Afisarea listei jocurilor");
                 Console.WriteLine("F. Cautarea jocului");
                 Console.WriteLine("M. Cautarea jocurilor dupa un criteriu");
+                Console.WriteLine("N. Actualizarea jocului");
                 Console.WriteLine("X. Iesirea din aplicatia");
                 Console.WriteLine("------------------------------------");
 
@@ -31,41 +36,42 @@ namespace ProiectCatalogDeJocuri
                     switch (optiunea)
                     {
                         case "C":
-                            Catalog1.JocNou = Citirea(Catalog1);
+                            JocNou = Citirea();
                             break;
                         case "A":
-                            if (Catalog1.JocNou == null)
+                            if (JocNou == null)
                             {
                                 throw new Exception("Nu ati introdus nici o joaca");
                             }
-                            Console.WriteLine(Catalog1.JocNou.GetInfo());
+                            Console.WriteLine(JocNou.GetInfo());
                             break;
                         case "S":
-                            if (Catalog1.JocNou == null)
+                            if (JocNou == null)
                             {
                                 throw new Exception("Nu ati introdus un joc nou");
                             }
 
-                            Catalog1.Jocuri.Add(Catalog1.JocNou);
+                            Catalog.AddJoc(JocNou);
                             Console.WriteLine("Joaca a fost salvat cu succes");
 
-                            Catalog1.JocNou = null;
+                            JocNou = null;
                             break;
                         case "L":
-                            if (Catalog1.Jocuri.Count == 0)
+                            Jocuri = Catalog.GetJocuri();
+                            if (Jocuri.Count == 0)
                             {
                                 throw new Exception("Nu ati introdus nici un joc");
                             }
 
-                            foreach (Joc jocul in Catalog1.Jocuri)
+                            foreach (Joc jocul in Jocuri)
                             {
-                                Console.WriteLine(jocul.Denumirea);
+                                Console.WriteLine($"[{jocul.InternalId}] - {jocul.Denumirea}");
                             }
 
                             break;
                         case "F":
                             Console.Write("Denumirea jocului cautat: ");
-                            Joc tJoc = Catalog1.GetJoc(Console.ReadLine().Trim().ToUpper());
+                            Joc tJoc = Catalog.GetJoc(Console.ReadLine().Trim().ToUpper());
 
                             if (tJoc == null)
                             {
@@ -97,7 +103,7 @@ namespace ProiectCatalogDeJocuri
                             Console.Write($"In {categoriaStr} dupa ce criteriu sa caute: ");
                             string criteriul = Console.ReadLine().Trim().ToUpper();
                             
-                            List<Joc> tJocuriGasite = Catalog1.GetJocuri(categoriaStr, criteriul);
+                            List<Joc> tJocuriGasite = Catalog.GetJocuriCautare(categoriaStr, criteriul);
 
                             if (tJocuriGasite.Count == 0)
                             {
@@ -110,6 +116,33 @@ namespace ProiectCatalogDeJocuri
                                 Console.WriteLine(elem.Denumirea);
                             }
 
+                            break;
+                        case "N":
+                            int nrJoc = Catalog.GetJocuri().Count();
+                            int id = 0;
+
+                            if (nrJoc == 0)
+                            {
+                                throw new Exception("Nu ati introdus nicio joaca");
+                            }
+
+                            do
+                            {
+                                Console.Write($"Introduceti nr jocului pentru modificare[{nrJoc - (nrJoc - 1)} - {nrJoc}]: ");
+                                int.TryParse(Console.ReadLine(), out id);
+                            }
+                            while (id < 1 || id > nrJoc);
+
+                            Joc jocActualizat = Citirea();
+                            jocActualizat.setInternalId(id);
+
+                            if (!Catalog.UpdateJoc(jocActualizat))
+                            {
+                                Console.WriteLine("Joaca nu a fost actualizata");
+                                break;   
+                            }
+
+                            Console.WriteLine("Joaca a fost actualizata");
                             break;
                         case "X":
                             Console.WriteLine("Iesirea din aplicatie...");
@@ -128,9 +161,8 @@ namespace ProiectCatalogDeJocuri
         }
 
 
-        static Joc Citirea(GestiuneaJoc Catalog)
+        static Joc Citirea()
         {
-            Catalog.IncrementInternalId();
             string denumirea = string.Empty;
             double pret = 0.0;
             double rate = 0.0;
@@ -273,7 +305,7 @@ namespace ProiectCatalogDeJocuri
 
             varsta = (RatingVarsta)varstaSelectata;
 
-            return new Joc(Catalog.CurrentId, denumirea, pret, genre, platforme, editori, dezvoltatori, rate, varsta);
+            return new Joc(denumirea, pret, genre, platforme, editori, dezvoltatori, rate, varsta);
         }
     }
 }

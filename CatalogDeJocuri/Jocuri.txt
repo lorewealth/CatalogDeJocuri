@@ -1,0 +1,7 @@
+1;Crusader Kings III;8,8;9,5;Strategy|Grand Strategy|Medieval;Steam;Paradox Development Studio;Paradox Interactive;PEGI12
+2;Crusader Kings II;0;9;Grand Strategy|Strategy|Medieval;Steam;Paradox Development Studio;Paradox Interactive;PEGI12
+3;The Elder Scrolls V: Skyrim;8,9;9,9;Open World|Quest|Fantasy;Steam|GOG;Bethesda Game Studios;Bethesda Softworks;PEGI18
+4;Factorio;35;9,6;Automation|Base Building;Steam;Wube Software;Wube Software;PEGI3
+5;Sid Meier's Civilization VI;5,99;8,5;Turn-Based Strategy|Historical|Strategy;Steam|Epic;Firaxis Games|Aspyr(Mac)|Aspyr(Linux);2K|Aspyr(Mac)|Aspyr(Linux);PEGI12
+6;Half-Life 2;9,99;9,6;Sci-fi|Action|FPS|Classic;Steam;Valve;Valve;PEGI16
+7;Battlefield 1;39,99;8,5;FPS|World War I|War|Shooter;Steam|Epic;DICE;Electronic Arts;PEGI18

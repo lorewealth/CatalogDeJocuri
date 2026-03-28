@@ -8,9 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CategoriiDisponibile\EnumGestionare.csproj" />
     <ProjectReference Include="..\EnumGestionare\EnumGestionare.csproj" />
-    <ProjectReference Include="..\GestionareaJocurilor\GestionareaJocurilor.csproj" />
+    <ProjectReference Include="..\StocareJocurilor\StocareJocurilor.csproj" />
     <ProjectReference Include="..\Joc\DespreJoc.csproj" />
   </ItemGroup>
 
