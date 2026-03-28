@@ -29,6 +29,23 @@ namespace StocareJocurilor
             return Jocuri.Find(jocul => jocul.Denumirea.Equals(tDenumirea, StringComparison.OrdinalIgnoreCase));
         }
 
+        public bool UpdateJoc(Joc jocActualizat)
+        {
+            bool modificatSucces = false;
+
+            foreach (Joc jocMEM in Jocuri)
+            {
+                Joc jocT = jocMEM;
+                if(jocT.InternalId == jocActualizat.InternalId)
+                {
+                    jocT = jocActualizat;
+                    modificatSucces = true;
+                }
+            }
+
+            return modificatSucces;
+        }
+
         public List<Joc> GetJocuri()
         {
             return Jocuri;

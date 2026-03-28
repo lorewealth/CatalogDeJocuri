@@ -25,6 +25,7 @@ namespace ProiectCatalogDeJocuri
                 Console.WriteLine("L. Afisarea listei jocurilor");
                 Console.WriteLine("F. Cautarea jocului");
                 Console.WriteLine("M. Cautarea jocurilor dupa un criteriu");
+                Console.WriteLine("N. Actualizarea jocului");
                 Console.WriteLine("X. Iesirea din aplicatia");
                 Console.WriteLine("------------------------------------");
 
@@ -115,6 +116,33 @@ namespace ProiectCatalogDeJocuri
                                 Console.WriteLine(elem.Denumirea);
                             }
 
+                            break;
+                        case "N":
+                            int nrJoc = Catalog.GetJocuri().Count();
+                            int id = 0;
+
+                            if (nrJoc == 0)
+                            {
+                                throw new Exception("Nu ati introdus nicio joaca");
+                            }
+
+                            do
+                            {
+                                Console.Write($"Introduceti nr jocului pentru modificare[{nrJoc - (nrJoc - 1)} - {nrJoc}]: ");
+                                int.TryParse(Console.ReadLine(), out id);
+                            }
+                            while (id < 1 || id > nrJoc);
+
+                            Joc jocActualizat = Citirea();
+                            jocActualizat.setInternalId(id);
+
+                            if (!Catalog.UpdateJoc(jocActualizat))
+                            {
+                                Console.WriteLine("Joaca nu a fost actualizata");
+                                break;   
+                            }
+
+                            Console.WriteLine("Joaca a fost actualizata");
                             break;
                         case "X":
                             Console.WriteLine("Iesirea din aplicatie...");

@@ -89,6 +89,27 @@ namespace StocareJocurilor
             return null;
         }
 
+        public bool UpdateJoc(Joc joculActualizat)
+        {
+            List<Joc> JocuriTXT = GetJocuri();
+            bool updateSucces = false;
+
+            using(StreamWriter fisier = new StreamWriter(denFisier, false))
+            {
+                foreach (Joc jocTXT in JocuriTXT)
+                {
+                    Joc jocul = jocTXT;
+                    if (jocTXT.InternalId == joculActualizat.InternalId)
+                    {
+                        jocul = joculActualizat;
+                    }
+                    fisier.WriteLine(jocul.FormatareJoculuiInStr());
+                }
+                updateSucces = true;
+            }
+            return updateSucces;
+        }
+
         public int GetNextIdJoc()
         {
             List<Joc> Jocuri = GetJocuri();
