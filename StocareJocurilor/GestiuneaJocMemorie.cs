@@ -31,19 +31,13 @@ namespace StocareJocurilor
 
         public bool UpdateJoc(Joc jocActualizat)
         {
-            bool modificatSucces = false;
 
-            foreach (Joc jocMEM in Jocuri)
-            {
-                Joc jocT = jocMEM;
-                if(jocT.InternalId == jocActualizat.InternalId)
-                {
-                    jocT = jocActualizat;
-                    modificatSucces = true;
-                }
-            }
+            int index = Jocuri.IndexOf(Jocuri.Find(joc => joc.InternalId == jocActualizat.InternalId));
+            if (index == -1) return false;
 
-            return modificatSucces;
+            Jocuri[index] = jocActualizat;
+
+            return true;
         }
 
         public List<Joc> GetJocuri()
