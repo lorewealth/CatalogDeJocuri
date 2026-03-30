@@ -32,7 +32,7 @@ namespace StocareJocurilor
         public bool UpdateJoc(Joc jocActualizat)
         {
 
-            int index = Jocuri.IndexOf(Jocuri.Find(joc => joc.InternalId == jocActualizat.InternalId));
+            int index = Jocuri.FindIndex(joc => joc.InternalId == jocActualizat.InternalId);
             if (index == -1) return false;
 
             Jocuri[index] = jocActualizat;

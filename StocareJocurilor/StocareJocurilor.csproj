@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EnumGestionare\EnumGestionare.csproj" />
     <ProjectReference Include="..\Joc\DespreJoc.csproj" />
   </ItemGroup>
 
