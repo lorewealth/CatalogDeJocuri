@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CategoriiDisponibile\EnumGestionare.csproj" />
     <ProjectReference Include="..\EnumGestionare\EnumGestionare.csproj" />
     <ProjectReference Include="..\StocareJocurilor\StocareJocurilor.csproj" />
     <ProjectReference Include="..\Joc\DespreJoc.csproj" />
