@@ -8,27 +8,28 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using StocareJocurilor;
+using CatalogDeJocuri;
+using DespreJoc;
 
-namespace Lab6
+namespace WPF
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        IStocare AdministrJocuri = Decident.PrelucrareaDatelor();
+        List<Joc> Jocuri;
+
         public MainWindow()
         {
             InitializeComponent();
-        }
+            Jocuri = AdministrJocuri.GetJocuri();
+            MessageBox.Show(Jocuri.Count().ToString());
 
-        private void Lab6_TextInput(object sender, TextCompositionEventArgs e)
-        {
-
-        }
-
-        private void Lab6_Click(object sender, RoutedEventArgs e)
-        {
-
+            DescJocSing.Text += string.Join("\n========================================\n", Jocuri.Select(joc => joc.GetInfo())) ;
+            
         }
     }
 }

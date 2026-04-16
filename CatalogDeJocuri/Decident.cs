@@ -11,10 +11,10 @@ namespace CatalogDeJocuri
 
         public static IStocare PrelucrareaDatelor()
         {
-            string formatSalvare = ConfigurationManager.AppSettings[FORMAT];//se va prelua valoarea a cheielui FORMAT
-            string numeFisier = ConfigurationManager.AppSettings[NUME_FISIER];//se ia valoarea de la cheie NUME_FISIER in App.config
+            string formatSalvare = ConfigurationManager.AppSettings[FORMAT] ?? "";//se va prelua valoarea a cheielui FORMAT
+            string numeFisier = ConfigurationManager.AppSettings[NUME_FISIER] ?? "";//se ia valoarea de la cheie NUME_FISIER in App.config
 
-            string locatieSolutie = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string locatieSolutie = Directory.GetParent(Directory.GetCurrentDirectory())?.Parent?.Parent?.Parent?.FullName ?? "";
             string locatieCompleta = locatieSolutie + "//" + numeFisier;
 
             if (formatSalvare != null)

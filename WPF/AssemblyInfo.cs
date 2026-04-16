@@ -9,7 +9,7 @@ using System.Windows;
                                                 // app, or any theme specific resource dictionaries)
 )]
 
-namespace Lab6 { 
+namespace WPF { 
     public partial class MainWindow : Window
     {
     }
