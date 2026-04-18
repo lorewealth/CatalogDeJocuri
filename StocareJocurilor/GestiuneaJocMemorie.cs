@@ -24,6 +24,26 @@ namespace StocareJocurilor
             Jocuri.Add(joc);
         }
 
+        public bool RemoveJoc(string tDenumirea)
+        {
+            int id = 1;
+            int idx = Jocuri.FindIndex(joc => joc.Denumirea.Equals(tDenumirea, StringComparison.OrdinalIgnoreCase));
+            if (idx == -1) return false;
+            Jocuri.RemoveAt(idx);
+            foreach(Joc joc in Jocuri)
+            {
+                joc.setInternalId(id++);
+            }
+            return true;
+        }
+
+        public bool RemoveUltJoc()
+        {
+            if (!Jocuri.Any()) return false;
+            Jocuri.Remove(Jocuri.Last());
+            return true;
+        }
+
         public Joc GetJoc(string tDenumirea)
         {
             return Jocuri.Find(jocul => jocul.Denumirea.Equals(tDenumirea, StringComparison.OrdinalIgnoreCase));

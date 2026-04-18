@@ -5,13 +5,97 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
-        Title="WPF" Height="500" Width="800"
+        Title="Catalog de Jocuri" Height="500" Width="800"
         WindowStyle="SingleBorderWindow"
         WindowState="Maximized"
         Background="Bisque">
     <StackPanel>
-        <Label Content="Afisarea Jocurilor" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
-        <Border Name="DescJocuri" CornerRadius="10" Background="White" Padding="15" HorizontalAlignment="Center" MaxHeight="400" Width="400" VerticalAlignment="Top" Margin="0,0,0,10">
+        <Label Content="Introducerea Jocului" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Margin" Value="5,0,5,10"/>
+                </Style>
+            </Grid.Resources>
+            <StackPanel Grid.Row="0" Grid.Column="0">
+                <Label Content="Denumirea" Padding="0" HorizontalAlignment="Center"/>
+                <TextBox x:Name="Denumirea" Height="25" Width="Auto"/>
+                <TextBlock x:Name="ErrDenumirea" Text="Denumirea Invalida" Foreground="Crimson" Visibility="Collapsed"/>
+            </StackPanel>
+            <StackPanel Grid.Row="0" Grid.Column="1" >
+                <Label Content="Pret" Padding="0" HorizontalAlignment="Center"/>
+                <TextBox x:Name="Pret" Height="25" Width="Auto"/>
+                <TextBlock x:Name="ErrPret" Text="Pret Invalid" Foreground="Crimson" Visibility="Collapsed"/>
+            </StackPanel>
+            <StackPanel Grid.Row="0" Grid.Column="2">
+                <Label Content="Genre" Padding="0" HorizontalAlignment="Center"/>
+                <TextBox x:Name="Genre" Height="25" Width="Auto"/>
+                <TextBlock x:Name="ErrGenre" Text="Genre Invalide" Foreground="Crimson" Visibility="Collapsed"/>
+            </StackPanel>
+            <StackPanel Grid.Row="0" Grid.Column="3">
+                <Label Content="Platforme" Padding="0" HorizontalAlignment="Center"/>
+                <ComboBox x:Name="SelectatorPlatforme" Height="25" SelectedIndex="0" HorizontalContentAlignment="Stretch">
+                    <ComboBox.Items>
+                        <ComboBoxItem Content="-- Selecteaza --"/>
+                        <CheckBox Content="Steam"/>
+                        <CheckBox Content="EpicGames"/>
+                        <CheckBox Content="GOG"/>
+                        <CheckBox Content="itch.io"/>
+                    </ComboBox.Items>
+                </ComboBox>
+                <TextBlock x:Name="ErrPlatforme" Text="Platforme Invalide" Foreground="Crimson" Visibility="Collapsed"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="0">
+                <Label Content="Rate(1-10)" Padding="0" HorizontalAlignment="Center"/>
+                <TextBox x:Name="Rate" Height="25" Width="Auto"/>
+                <TextBlock x:Name="ErrRate" Text="Rate Invalid" Foreground="Crimson" Visibility="Collapsed"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="1">
+                <Label Content="Editori" Padding="0" HorizontalAlignment="Center"/>
+                <TextBox x:Name="Editori" Height="25" Width="Auto"/>
+                <TextBlock x:Name="ErrEditori" Text="Editori Invalide" Foreground="Crimson" Visibility="Collapsed"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="2">
+                <Label Content="Dezvoltatori" Padding="0" HorizontalAlignment="Center"/>
+                <TextBox x:Name="Dezvoltatori" Height="25" Width="Auto"/>
+                <TextBlock x:Name="ErrDezvoltatori" Text="Dezvoltatori Invalide" Foreground="Crimson" Visibility="Collapsed"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="3">
+                <Label Content="Varsta(PEGI3-PEGI18)" Padding="0" HorizontalAlignment="Center"/>
+                <ComboBox x:Name="SelectatorVarsta" SelectedIndex="0" Height="25">
+                    <ComboBoxItem Content="-- Selecteaza --"/>
+                    <ComboBoxItem Content="PEGI3"/>
+                    <ComboBoxItem Content="PEGI7"/>
+                    <ComboBoxItem Content="PEGI12"/>
+                    <ComboBoxItem Content="PEGI16"/>
+                    <ComboBoxItem Content="PEGI18"/>
+                </ComboBox>
+                <TextBlock x:Name="ErrVarsta" Text="Rating de Varsta Invalida" Foreground="Crimson" Visibility="Collapsed"/>
+            </StackPanel>
+        </Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+            </StackPanel.Resources>
+            <Button x:Name="AdaugaJoc" Content="Adauga Joc" Click="AdaugaJocClick" Width="90" Height="30"/>
+            <Button x:Name="StergeJoc" Content="Sterge Ultimul Joc" Click="StergeUltJocClick" Width="120" Height="30"/>
+            <Button x:Name="AfiseazaJoc" Content="Afiseaza Ultimul Joc" Click="AfiseaUltJocClick" Width="120" Height="30"/>
+        </StackPanel>
+        <TextBlock x:Name="Rezultat" Text="" Padding="5" Width="Auto" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+        <Border Name="DescJocuri" CornerRadius="10" Background="White" Padding="15" HorizontalAlignment="Center" MaxHeight="400" Width="400" VerticalAlignment="Top" Margin="0,0,0,10" Visibility="Collapsed">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="15" Direction="270" Opacity="0.5"/>
             </Border.Effect>
@@ -19,6 +103,5 @@
                 <TextBlock x:Name="DescJocSing" Text="" TextWrapping="Wrap"/>
             </ScrollViewer>
         </Border>
-
     </StackPanel>
 </Window>

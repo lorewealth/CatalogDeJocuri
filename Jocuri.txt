@@ -5,3 +5,4 @@
 5;Sid Meier's Civilization VI;5,99;8,5;Turn-Based Strategy|Historical|Strategy;Steam|Epic;Firaxis Games|Aspyr(Mac)|Aspyr(Linux);2K|Aspyr(Mac)|Aspyr(Linux);PEGI12
 6;Half-Life 2;9,99;9,6;Sci-fi|Action|FPS|Classic;Steam;Valve;Valve;PEGI16
 7;Battlefield 1;39,99;8,5;FPS|World War I|War|Shooter;Steam|Epic;DICE;Electronic Arts;PEGI18
+8;Minecraft;29,99;8,5;Sandbox|Open-World|Simulator;Steam;Mojang;Mojang;PEGI7

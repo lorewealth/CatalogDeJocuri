@@ -22,6 +22,8 @@ namespace ProiectCatalogDeJocuri
                 Console.WriteLine("C. Citirea jocului");
                 Console.WriteLine("A. Afisarea jocului");
                 Console.WriteLine("S. Salvarea jocului");
+                Console.WriteLine("Q. Stergerea jocului");
+                Console.WriteLine("W. Stergerea ultimului joc");
                 Console.WriteLine("L. Afisarea listei jocurilor");
                 Console.WriteLine("F. Cautarea jocului");
                 Console.WriteLine("M. Cautarea jocurilor dupa un criteriu");
@@ -55,6 +57,36 @@ namespace ProiectCatalogDeJocuri
                             Console.WriteLine("Joaca a fost salvat cu succes");
 
                             JocNou = null;
+                            break;
+                        case "Q":
+                            if (Jocuri.Count == 0)
+                            {
+                                throw new Exception("Nu ati introdus nici o joaca");
+                            }
+
+                            Console.Write("Introduceti denumirea: ");
+                            string den = Console.ReadLine();
+
+                            if (!Catalog.RemoveJoc(den))
+                            {
+                                throw new Exception("Joaca nu fost stearsa");
+                            }
+
+                            Console.WriteLine("Joaca a fost cu succes stearsa");
+
+                            break;
+                        case "W":
+                            if(Jocuri.Count == 0)
+                            {
+                                throw new Exception("Nu ati introdus nici o joaca");
+                            }
+
+                            if (!Catalog.RemoveUltJoc())
+                            {
+                                throw new Exception("Ultima joaca nu a fost stearsa");
+                            }
+
+                            Console.WriteLine("Ultima joaca a fost stearsa");
                             break;
                         case "L":
                             Jocuri = Catalog.GetJocuri();
