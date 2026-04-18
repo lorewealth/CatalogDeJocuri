@@ -128,5 +128,46 @@ namespace StocareJocurilor
                 fisier.WriteLine(joc.FormatareJoculuiInStr());
             }
         }
+
+        public bool RemoveJoc(string denumirea)
+        {
+            int id = 1;
+            bool sters = false;
+            List<Joc> Jocuri = GetJocuri();
+
+            if (Jocuri.Count == 0) return false;
+            
+            using (StreamWriter fisier = new StreamWriter(denFisier, false))
+            {
+                foreach (Joc j in Jocuri)
+                {
+                    Joc jocT = j;
+                    if (jocT.Denumirea.Equals(denumirea, StringComparison.OrdinalIgnoreCase))
+                    {
+                        sters = true;
+                        continue;
+                    }
+                    jocT.setInternalId(id++);
+                    fisier.WriteLine(jocT.FormatareJoculuiInStr());
+                }
+            }
+            return sters;
+        }
+
+        public bool RemoveUltJoc()
+        {
+            List<Joc> Jocuri = GetJocuri();
+
+            if (Jocuri.Count == 0) return false;
+
+            using (StreamWriter fisier = new StreamWriter(denFisier, false))
+            {
+                for(int i = 0; i < Jocuri.Count-1; i++)
+                {
+                    fisier.WriteLine(Jocuri[i].FormatareJoculuiInStr());
+                }
+                return true;
+            }
+        }
     }
 }
