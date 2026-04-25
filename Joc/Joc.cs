@@ -13,11 +13,34 @@ namespace DespreJoc
         public double Pret { get; private set; }
         public double Rate { get; private set; }
         public List<string> Genre { get; private set; }
+        public string GenreStr
+        { 
+            get { return string.Join(", ", Genre); }
+            private set;
+        }
         public PlatformeDisponibile Platforme { get; private set; }
+        //public string PlatformeStr 
+        //{ 
+        //    get { return string.Join(", ", Platforme); } 
+        //    private set; 
+        //}
         public List<string> Editori { get; private set; }
+        public string EditoriStr
+        {
+            get { return string.Join(", ", Editori); }
+            private set;
+        }
         public List<string> Dezvoltatori { get; private set; }
+        public string DezvoltatoriStr
+        {
+            get { return string.Join(", ", Dezvoltatori); }
+            private set;
+        }
         public RatingVarsta Varsta { get; private set; }
+        public int Anul { get; private set; }
+        public bool EsteSters { get; private set; }
 
+        //constante
         private const char SEPARATOR_PRINCIPAL_FISIER = ';';
         private const char SEPARATOR_SECUNDAR_FISIER = '|';
         private const int INTERNAL_ID = 0;
@@ -29,11 +52,15 @@ namespace DespreJoc
         private const int DEZVOLTATORI = 6;
         private const int EDITORI = 7;
         private const int VARSTA = 8;
+        private const int ANUL = 9;
+        private const int ESTE_STERS = 10;
 
+        //metode
         public void setInternalId(int id) { InternalId = id; }
+        public void setEsteSters(bool setter) { EsteSters = setter; }
 
         //constructor
-        public Joc(string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<string> Editori, List<string> Dezvoltatori, double Rate, RatingVarsta RatingVarsta)
+        public Joc(string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<string> Editori, List<string> Dezvoltatori, double Rate, RatingVarsta RatingVarsta, int Anul)
         {
             this.Denumirea = Denumirea;
             this.Pret = Pret;
@@ -43,6 +70,8 @@ namespace DespreJoc
             this.Editori = Editori;
             this.Dezvoltatori = Dezvoltatori;
             this.Varsta = RatingVarsta;
+            this.Anul = Anul;
+            EsteSters = false;
         }
 
         public Joc(string linieStr)
@@ -62,6 +91,9 @@ namespace DespreJoc
                 if (Enum.TryParse(platforma, true, out PlatformeDisponibile Platforma)) { this.Platforme |= Platforma; }
             }
             if (Enum.TryParse(date[VARSTA], true, out RatingVarsta Varsta)) { this.Varsta = Varsta; }
+
+            this.Anul = Convert.ToInt32(date[ANUL]);
+            this.EsteSters = Convert.ToBoolean(date[ESTE_STERS]);
         }
 
         public string FormatareJoculuiInStr()
@@ -73,7 +105,7 @@ namespace DespreJoc
 
             string sPlatforme = string.Join(SEPARATOR_SECUNDAR_FISIER, platformeFormatate); 
             
-            string formatFinal = string.Format("{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}{0}{8}{0}{9}", SEPARATOR_PRINCIPAL_FISIER,
+            string formatFinal = string.Format("{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}{0}{8}{0}{9}{0}{10}{0}{11}", SEPARATOR_PRINCIPAL_FISIER,
                                                 InternalId.ToString(),//{1}
                                                 Denumirea ?? "NECUNOSCUT",
                                                 Pret.ToString() ?? "0.0",
@@ -82,19 +114,28 @@ namespace DespreJoc
                                                 sPlatforme ?? "NECUNOSCUT",
                                                 sDezvoltatori ?? "NECUNOSCUT",
                                                 sEditori ?? "NECUNOSCUT",
-                                                Varsta.ToString() ?? "PEGI3");//{9}
+                                                Varsta.ToString() ?? "PEGI3",
+                                                Anul.ToString() ?? "NECUNOSCUT",
+                                                EsteSters);//{11}
             return formatFinal;
         }
 
-        public string GetInfo()
+        public string GetInfo(bool userMod = true)
         {
             string info = $"Detalii jocului: {Denumirea}\nPretul: {Pret}\nRating: {Rate}/10";
-                info += "\nGenre:\n\t" + string.Join("\n\t", Genre);
-                info += "\nPlatforme:\n\t" + Platforme.ToString().Replace(", ", "\n\t");
-                info += "\nDezvoltatori:\n\t" + string.Join("\n\t", Dezvoltatori);
-                info += "\nEditori:\n\t" + string.Join("\n\t", Editori);
-                info += "\nRating de Varsta:\n\t" + Varsta.ToString();
-            return info;
+            info += "\nGenre:\n\t" + string.Join("\n\t", Genre);
+            info += "\nPlatforme:\n\t" + Platforme.ToString().Replace(", ", "\n\t");
+            info += "\nDezvoltatori:\n\t" + string.Join("\n\t", Dezvoltatori);
+            info += "\nEditori:\n\t" + string.Join("\n\t", Editori);
+            info += "\nRating de Varsta:\n\t" + Varsta.ToString();
+            info += "\nAnul:\n\t" + Anul;
+
+            if (userMod) return info;
+            else
+            {
+                info += "\nEsteSters:\n\t" + EsteSters;
+                return info;
+            }
         }
     }
 }
