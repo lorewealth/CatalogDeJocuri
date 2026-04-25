@@ -14,7 +14,7 @@
         Steam = 1 << 0,
         Epic = 1 << 1,
         GOG = 1 << 2,
-        itchio = 1 << 3
+        itchIo = 1 << 3
     }
 
     public enum RatingVarsta

@@ -80,7 +80,7 @@ namespace StocareJocurilor
                 while((date = fisier.ReadLine()) != null)
                 {
                     Joc jocul = new Joc(date);
-                    if(jocul.Denumirea.Equals(den, StringComparison.OrdinalIgnoreCase))
+                    if(jocul.Denumirea.Equals(den, StringComparison.OrdinalIgnoreCase) && jocul.EsteSters == false)
                     {
                         return jocul;
                     }
@@ -99,7 +99,7 @@ namespace StocareJocurilor
                 foreach (Joc jocTXT in JocuriTXT)
                 {
                     Joc jocul = jocTXT;
-                    if (jocTXT.InternalId == joculActualizat.InternalId)
+                    if (jocTXT.InternalId == joculActualizat.InternalId && jocTXT.EsteSters == false)
                     {
                         jocul = joculActualizat;
                     }
@@ -121,50 +121,60 @@ namespace StocareJocurilor
 
         public void AddJoc(Joc joc)
         {
-            joc.setInternalId(GetNextIdJoc());
+            List<Joc> Jocuri = GetJocuri();
+            Joc exista = Jocuri.FirstOrDefault(j => j.Denumirea.Equals(joc.Denumirea, StringComparison.OrdinalIgnoreCase));
 
-            using(StreamWriter fisier = new StreamWriter(denFisier, true))
+            if (exista != null)
+                exista.setEsteSters(false);
+            else
             {
-                fisier.WriteLine(joc.FormatareJoculuiInStr());
+                joc.setInternalId(GetNextIdJoc());
+                Jocuri.Add(joc);
+            }
+
+            using(StreamWriter fisier = new StreamWriter(denFisier, false))
+            {
+                foreach(Joc j in Jocuri)
+                {
+                    fisier.WriteLine(j.FormatareJoculuiInStr());
+                }
             }
         }
 
         public bool RemoveJoc(string denumirea)
         {
-            int id = 1;
-            bool sters = false;
             List<Joc> Jocuri = GetJocuri();
-
-            if (Jocuri.Count == 0) return false;
+            bool GasitSisters = false;
+            if (Jocuri.Count == 0 || Jocuri.All(joc => joc.EsteSters)) return false;
             
             using (StreamWriter fisier = new StreamWriter(denFisier, false))
             {
                 foreach (Joc j in Jocuri)
                 {
-                    Joc jocT = j;
-                    if (jocT.Denumirea.Equals(denumirea, StringComparison.OrdinalIgnoreCase))
+                    if (!GasitSisters && j.Denumirea.Equals(denumirea, StringComparison.OrdinalIgnoreCase) && !j.EsteSters)
                     {
-                        sters = true;
-                        continue;
+                        j.setEsteSters(true);
+                        GasitSisters = true;
                     }
-                    jocT.setInternalId(id++);
-                    fisier.WriteLine(jocT.FormatareJoculuiInStr());
+                    fisier.WriteLine(j.FormatareJoculuiInStr());
                 }
             }
-            return sters;
+            return GasitSisters;
         }
 
         public bool RemoveUltJoc()
         {
             List<Joc> Jocuri = GetJocuri();
 
-            if (Jocuri.Count == 0) return false;
+            if (Jocuri.Count == 0 || Jocuri.All(joc => joc.EsteSters)) return false;
+
+            Jocuri.Last(joc => !joc.EsteSters).setEsteSters(true);
 
             using (StreamWriter fisier = new StreamWriter(denFisier, false))
             {
-                for(int i = 0; i < Jocuri.Count-1; i++)
+                foreach(Joc joc in Jocuri)
                 {
-                    fisier.WriteLine(Jocuri[i].FormatareJoculuiInStr());
+                    fisier.WriteLine(joc.FormatareJoculuiInStr());
                 }
                 return true;
             }
