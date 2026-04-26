@@ -19,11 +19,6 @@ namespace DespreJoc
             private set;
         }
         public PlatformeDisponibile Platforme { get; private set; }
-        //public string PlatformeStr 
-        //{ 
-        //    get { return string.Join(", ", Platforme); } 
-        //    private set; 
-        //}
         public List<string> Editori { get; private set; }
         public string EditoriStr
         {
@@ -54,6 +49,12 @@ namespace DespreJoc
         private const int VARSTA = 8;
         private const int ANUL = 9;
         private const int ESTE_STERS = 10;
+
+        public const double RATE_MIN = 1;
+        public const double RATE_MAX = 10;
+        public const int ANUL_MIN = 1958;
+        public const int ANUL_MAX = 2050;
+
 
         //metode
         public void setInternalId(int id) { InternalId = id; }

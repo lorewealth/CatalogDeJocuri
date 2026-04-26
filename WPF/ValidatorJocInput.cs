@@ -8,16 +8,12 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using EnumGestionare;
+using DespreJoc;
 
 namespace WPF
 {
-    class Validator
+    class JocInput
     {
-        private const int RATE_MIN = 1;
-        private const int RATE_MAX = 10;
-        private const int ANUL_MIN = 1958;
-        private const int ANUL_MAX = 2050;
-
         public static bool ValidareJocInput(TextBox Denumirea, TextBox Pret, TextBox Rate, TextBox Genre, ComboBox Platforme, TextBox Editori, TextBox Dezvoltatori, ComboBox Varsta, TextBox Anul,
                                             TextBlock ErrDenumirea, TextBlock ErrPret, TextBlock ErrRate, TextBlock ErrGenre, TextBlock ErrPlatforme, TextBlock ErrEditori, TextBlock ErrDezvoltatori, TextBlock ErrVarsta, TextBlock ErrAnul)
         {
@@ -61,10 +57,10 @@ namespace WPF
                 valid = false;
                 ErrHandler(ErrRate, Rate, "Introduceti o rata!");
             }
-            else if (!double.TryParse(rateWPF, out double rateD) || (rateD < RATE_MIN || rateD > RATE_MAX))
+            else if (!double.TryParse(rateWPF, out double rateD) || (rateD < Joc.RATE_MIN || rateD > Joc.RATE_MAX))
             {
                 valid = false;
-                ErrHandler(ErrRate, Rate, $"Introduceti o rata intre {RATE_MIN}-{RATE_MAX}!");
+                ErrHandler(ErrRate, Rate, $"Introduceti o rata intre {Joc.RATE_MIN}-{Joc.RATE_MAX}!");
             }
             else ResetErr(ErrRate, Rate);
 
@@ -136,10 +132,10 @@ namespace WPF
                 valid = false;
                 ErrHandler(ErrAnul, Anul, "Introduceti un an!");
             }
-            else if (!int.TryParse(AnulWPF, out int anulI) || (anulI < ANUL_MIN || anulI > ANUL_MAX))
+            else if (!int.TryParse(AnulWPF, out int anulI) || (anulI < Joc.ANUL_MIN || anulI > Joc.ANUL_MAX))
             {
                 valid = false;
-                ErrHandler(ErrAnul, Anul, $"Introduceti un an valid intre {ANUL_MIN} - {ANUL_MAX}");
+                ErrHandler(ErrAnul, Anul, $"Introduceti un an valid intre {Joc.ANUL_MIN} - {Joc.ANUL_MAX}");
             }
             else ResetErr(ErrAnul, Anul);
 
