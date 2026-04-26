@@ -8,5 +8,5 @@
 8;Minecraft;29,99;8,5;Sandbox|Open-World|Simulator;Steam;Mojang;Mojang;PEGI7;2011;False
 9;Total War: Warhammer III;30;9,7;Turn-Based Strategy|Strategy;Steam;CREATIVE ASSEMBLY|Feral Interactive;SEGA|Feral Interactive;PEGI16;2022;False
 10;Total War: Attila;25;9,9;Turn-Based Strategy|Strategy|Historical|War;Steam|Epic|GOG|itchIo;CREATIVE ASSEMBLY;SEGA;PEGI16;2015;False
-11;TestDen;9999,99;9,9999;TestGen;Steam|Epic|GOG;TestDezv;TestEdit;PEGI12;2000;True
+11;TestDen;9999,99;9,9999;TestGen;Steam|Epic|GOG;TestDezv;TestEdit;PEGI12;2000;False
 12;Kerbal Space Program;39,99;9,4;Space|Simulation|Sandbox|Physics;Steam|GOG;Squad;Private Division;PEGI7;2015;False

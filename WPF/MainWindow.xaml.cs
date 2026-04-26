@@ -22,6 +22,9 @@ namespace WPF
     {
         IStocare AdministrJocuri = Decident.PrelucrareaDatelor();
         List<Joc> Jocuri;
+        protected const int RATE_MIN = 1;
+        protected const int RATE_MAX = 10;
+
 
         public MainWindow()
         {
@@ -53,7 +56,7 @@ namespace WPF
         private void AdaugaJocClick(object sender, RoutedEventArgs e)
         {
             //valideaza input a userului
-            if (!Validator.ValidareJocInput(Denumirea, Pret, Rate, Genre, SelectatorPlatforme, Editori, Dezvoltatori, SelectatorVarsta, Anul,
+            if (!JocInput.ValidareJocInput(Denumirea, Pret, Rate, Genre, SelectatorPlatforme, Editori, Dezvoltatori, SelectatorVarsta, Anul,
                                            ErrDenumirea, ErrPret, ErrRate, ErrGenre, ErrPlatforme, ErrEditori, ErrDezvoltatori, ErrVarsta, ErrAnul))
             {
                 DescJocuri.Visibility = Visibility.Collapsed;
@@ -117,38 +120,70 @@ namespace WPF
             }
             Jocuri = AdministrJocuri.GetJocuri();
 
-            Rezultat.Visibility = Visibility.Visible;
-            Rezultat.Text = "Joaca a fost sters cu succes!";
-            Rezultat.Foreground = Brushes.White;
-            Rezultat.Background = Brushes.DarkGreen;
-            DescJocuri.Visibility = Visibility.Collapsed;
+            Rezultat.Visibility     = Visibility.Visible;
+            Rezultat.Text           = "Joaca a fost sters cu succes!";
+            Rezultat.Foreground     = Brushes.White;
+            Rezultat.Background     = Brushes.DarkGreen;
+            DescJocuri.Visibility   = Visibility.Collapsed;
 
             AfisareJocuri();
         }
 
-        //private void AfiseaUltJocClick(object sender, RoutedEventArgs e)
-        //{
-        //    Jocuri = AdministrJocuri.GetJocuri();
-        //    Joc Jocul = Jocuri.LastOrDefault(j => !j.EsteSters);
-
-        //    if (Jocul == null)
-        //    {
-        //        Rezultat.Text = "Nu exista nici o joaca!";
-        //        Rezultat.Foreground = Brushes.White;
-        //        Rezultat.Background = Brushes.Crimson;
-        //        DescJocuri.Visibility = Visibility.Collapsed;
-        //        return;
-        //    }
-        //    DescJocSing.Text = Jocul.GetInfo(true);
-        //    DescJocuri.Visibility = Visibility.Visible;
-
-        //    Rezultat.Visibility = Visibility.Collapsed;
-        //    return;
-        //}
-
         private void AfisareaJocCautatClick(object sender, RoutedEventArgs e)
         {
-            Joc joc = AdministrJocuri.GetJoc(CautareBox.Text);
+            string categoria = CautareRadButton().ToLower();
+            string criteriu = CautareBox.Text;
+
+            if (!Cautare.CautareInputValidator(categoria, criteriu)) return;
+            double inceput = 0.0;
+            double sfarsit = 0.0;
+
+            List<Joc> joculGasit = [];
+
+            switch (categoria)
+            {
+                case "denumirea":
+                case "genre":
+                case "platforme":
+                    string[] strArrRest = criteriu.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                    foreach(string str in strArrRest)
+                    {
+                        if (categoria == "denumirea") joculGasit = Jocuri.Where(joc => joc.Denumirea == str).ToList();
+                        if (categoria == "genre") joculGasit = Jocuri.Where(joc => joc.Genre.Any(genrul => genrul.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
+                        if (categoria == "platforme" && Enum.TryParse<PlatformeDisponibile>(str, true, out PlatformeDisponibile res))
+                        {
+                            joculGasit = Jocuri.Where(joc => joc.Platforme.HasFlag(res)).ToList();
+                        }
+                        if (categoria == "editori") joculGasit = Jocuri.Where(joc => joc.Editori.Any(editor => editor.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
+                        if (categoria == "dezvoltatori") joculGasit = Jocuri.Where(joc => joc.Dezvoltatori.Any(dezvoltator => dezvoltator.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
+                        if (categoria == "varsta") joculGasit = Jocuri.Where(joc => joc.Varsta.ToString().Equals(str, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                    }
+
+                    break;
+                case "pret":
+                case "rate":
+                case "anul":
+                    string[] strArrPRA = criteriu.Split('-', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                    double.TryParse(strArrPRA[0], out inceput); 
+                    double.TryParse(strArrPRA[1], out sfarsit);
+
+                    if (inceput > sfarsit) 
+                        (inceput, sfarsit) = (sfarsit, inceput);
+
+                    if (categoria == "pret") joculGasit = Jocuri.Where(joc => joc.Pret >= inceput && joc.Pret <= sfarsit).ToList();
+                    if (categoria == "rate") joculGasit = Jocuri.Where(joc => joc.Rate >= inceput && joc.Rate <= sfarsit).ToList();
+                    if (categoria == "anul") joculGasit = Jocuri.Where(joc => joc.Anul >= inceput && joc.Anul <= sfarsit).ToList();
+
+                    break;
+                default:
+                    break;  
+            }
+
+            DescJocCautat.Text = string.Join('\n', joculGasit.Select(joc => joc.GetInfo()));
+            DescJocuriCautare.Visibility = Visibility.Visible;
+
         }
 
         //metoda de a sterge input-ul vechi
@@ -166,6 +201,24 @@ namespace WPF
             Editori.Text = "";
             Dezvoltatori.Text = "";
             SelectatorVarsta.SelectedIndex = 0;
+            Anul.Text = "";
+        }
+
+        //metoda de a prelua de la radiobuton continut
+        private string CautareRadButton () 
+        {
+            // imi place stilul acest de cod tbh
+            if (DenumireaRadButton.IsChecked == true)    return DenumireaRadButton.Content.ToString();
+            if (PretRadButton.IsChecked == true)         return PretRadButton.Content.ToString();
+            if (RateRadButton.IsChecked == true)         return RateRadButton.Content.ToString();
+            if (GenreRadButton.IsChecked == true)        return GenreRadButton.Content.ToString();
+            if (PlatformeRadButton.IsChecked == true)    return PlatformeRadButton.Content.ToString();
+            if (EditoriRadButton.IsChecked == true)      return EditoriRadButton.Content.ToString();
+            if (DezvoltatoriRadButton.IsChecked == true) return DezvoltatoriRadButton.Content.ToString();
+            if (VarstaRadButton.IsChecked == true)       return VarstaRadButton.Content.ToString();
+            if (AnulRadButton.IsChecked == true)         return AnulRadButton.Content.ToString();
+
+            else return DenumireaRadButton.Content.ToString();
         }
     }
 }

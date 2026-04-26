@@ -29,7 +29,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <StackPanel x:Name="AdministJocPanel" Visibility="Visible" Grid.Row="0">
+            <StackPanel x:Name="AdministJocPanel" Visibility="Collapsed" Grid.Row="0">
                 <Label Content="Introducerea Jocului" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -143,6 +143,7 @@
                 CanUserDeleteRows="False"
                 IsReadOnly="True"
                 Margin="5,5,5,5"
+                Visibility="Collapsed"
                 >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Width="Auto" Binding="{Binding InternalId}"/>
@@ -157,17 +158,38 @@
                     <DataGridTextColumn Header="Anul" Width="Auto" Binding="{Binding Anul}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <StackPanel x:Name="CautareJoculPanel" Visibility="Collapsed">
+            <StackPanel x:Name="CautareJoculPanel" Visibility="Visible">
+                <StackPanel.Resources>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Margin" Value="10,5,5,20"/>
+                    </Style>
+                </StackPanel.Resources>
                 <Label Content="Cautarea Jocului" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
-                <Label Content="Denumirea: " Margin="30,0,0,0"/>
+                <Label Content="Selectati dupa care criteriu sa fie cautat joaca: " Margin="20,0,0,0"/>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.Resources>
+                        <Style TargetType="RadioButton">
+                            <Setter Property="Margin" Value="5,0,0,0"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <RadioButton x:Name="DenumireaRadButton" Content="Denumirea"/>
+                    <RadioButton x:Name="PretRadButton" Content="Pret"/>
+                    <RadioButton x:Name="RateRadButton" Content="Rate"/>
+                    <RadioButton x:Name="GenreRadButton" Content="Genre"/>
+                    <RadioButton x:Name="PlatformeRadButton" Content="Platforme"/>
+                    <RadioButton x:Name="EditoriRadButton" Content="Editori"/>
+                    <RadioButton x:Name="DezvoltatoriRadButton" Content="Dezvoltatori"/>
+                    <RadioButton x:Name="VarstaRadButton" Content="Varsta"/>
+                    <RadioButton x:Name="AnulRadButton" Content="Anul"/>
+                </StackPanel>
                 <TextBox x:Name="CautareBox" Width="500" Height="40" FontSize="20" VerticalContentAlignment="Center"/>
-                <Button Content="Cauti" Click="CautareJocClick" Width="80" Height="40" Margin="5,5,5,5"/>
+                <Button Content="Cauti" Click="AfisareaJocCautatClick" Width="80" Height="40" Margin="5,5,5,5"/>
                 <Border Name="DescJocuriCautare" CornerRadius="10" Background="White" Padding="15" HorizontalAlignment="Center" MaxHeight="400" Width="400" VerticalAlignment="Top" Margin="0,0,0,10" Visibility="Collapsed">
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="15" Direction="270" Opacity="0.5"/>
                     </Border.Effect>
                     <ScrollViewer VerticalScrollBarVisibility="Visible">
-                        <TextBlock x:Name="DescJocSingCaut" Text="" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="DescJocCautat" Text="" TextWrapping="Wrap"/>
                     </ScrollViewer>
                 </Border>
             </StackPanel>
