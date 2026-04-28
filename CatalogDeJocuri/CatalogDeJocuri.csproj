@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EnumGestionare\EnumGestionare.csproj" />
     <ProjectReference Include="..\StocareJocurilor\StocareJocurilor.csproj" />
     <ProjectReference Include="..\Joc\DespreJoc.csproj" />
   </ItemGroup>

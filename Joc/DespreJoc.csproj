@@ -7,8 +7,4 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\EnumGestionare\EnumGestionare.csproj" />
-  </ItemGroup>
-
 </Project>

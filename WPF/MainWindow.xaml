@@ -29,7 +29,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <StackPanel x:Name="AdministJocPanel" Visibility="Collapsed" Grid.Row="0">
+            <StackPanel x:Name="AdministJocPanel" Visibility="Visible" Grid.Row="0">
                 <Label Content="Introducerea Jocului" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -106,7 +106,10 @@
                 </Grid>
                 <StackPanel>
                     <Label Content="Anul: " Padding="0" HorizontalAlignment="Center"/>
-                    <TextBox x:Name="Anul" HorizontalAlignment="Center" Height="25" Width="100"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBox x:Name="Anul" HorizontalAlignment="Center" Height="25" Width="100"/>
+                        <CheckBox x:Name="eDisponibilCheckBox" Content="Este disponibil" Margin="10"/>
+                    </StackPanel>
                     <TextBlock x:Name="ErrAnul" Text="Anul Invalid" Foreground="Crimson" Visibility="Collapsed" HorizontalAlignment="Center" Width="Auto"/>
                 </StackPanel>
 
@@ -142,8 +145,8 @@
                 CanUserAddRows="False"
                 CanUserDeleteRows="False"
                 IsReadOnly="True"
-                Margin="5,5,5,5"
-                Visibility="Collapsed"
+                Margin="5"
+                Visibility="Visible"
                 >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Width="Auto" Binding="{Binding InternalId}"/>
@@ -156,43 +159,73 @@
                     <DataGridTextColumn Header="Dezvoltatori" Width="Auto" Binding="{Binding DezvoltatoriStr}"/>
                     <DataGridTextColumn Header="Varsta" Width="Auto" Binding="{Binding Varsta}"/>
                     <DataGridTextColumn Header="Anul" Width="Auto" Binding="{Binding Anul}"/>
+                    <DataGridTextColumn Header="Disponibil" Width="Auto" Binding="{Binding EsteDisponibil}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <StackPanel x:Name="CautareJoculPanel" Visibility="Visible">
-                <StackPanel.Resources>
+            <!-- Cautarea jocului -->
+            <Grid x:Name="CautareJoculPanel" Visibility="Collapsed">
+                <Grid.Resources>
                     <Style TargetType="StackPanel">
                         <Setter Property="Margin" Value="10,5,5,20"/>
                     </Style>
-                </StackPanel.Resources>
-                <Label Content="Cautarea Jocului" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
-                <Label Content="Selectati dupa care criteriu sa fie cautat joaca: " Margin="20,0,0,0"/>
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel.Resources>
-                        <Style TargetType="RadioButton">
-                            <Setter Property="Margin" Value="5,0,0,0"/>
-                        </Style>
-                    </StackPanel.Resources>
-                    <RadioButton x:Name="DenumireaRadButton" Content="Denumirea"/>
-                    <RadioButton x:Name="PretRadButton" Content="Pret"/>
-                    <RadioButton x:Name="RateRadButton" Content="Rate"/>
-                    <RadioButton x:Name="GenreRadButton" Content="Genre"/>
-                    <RadioButton x:Name="PlatformeRadButton" Content="Platforme"/>
-                    <RadioButton x:Name="EditoriRadButton" Content="Editori"/>
-                    <RadioButton x:Name="DezvoltatoriRadButton" Content="Dezvoltatori"/>
-                    <RadioButton x:Name="VarstaRadButton" Content="Varsta"/>
-                    <RadioButton x:Name="AnulRadButton" Content="Anul"/>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                    <Label Content="Cautarea Jocului" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
+                    <Label Content="Selectati dupa care criteriu sa fie cautat joaca: " Margin="20,0,0,0"/>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style TargetType="RadioButton">
+                                <Setter Property="Margin" Value="5,0,0,0"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <RadioButton x:Name="DenumireaRadButton" Content="Denumirea" IsChecked="True"/>
+                        <RadioButton x:Name="PretRadButton" Content="Pret"/>
+                        <RadioButton x:Name="RateRadButton" Content="Rate"/>
+                        <RadioButton x:Name="GenreRadButton" Content="Genre"/>
+                        <RadioButton x:Name="PlatformeRadButton" Content="Platforme"/>
+                        <RadioButton x:Name="EditoriRadButton" Content="Editori"/>
+                        <RadioButton x:Name="DezvoltatoriRadButton" Content="Dezvoltatori"/>
+                        <RadioButton x:Name="VarstaRadButton" Content="Varsta"/>
+                        <RadioButton x:Name="AnulRadButton" Content="Anul"/>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBox x:Name="CautareBox" Width="500" Height="40" FontSize="20"/>
+                        <TextBlock x:Name="ErrCautareBox" Text="Error" Visibility="Collapsed" Foreground="Red"/>
+                    </StackPanel>
+                    <Button Content="Cauti" Click="AfisareaJocCautatClick" Width="80" Height="40" Margin="5,5,5,5"/>
                 </StackPanel>
-                <TextBox x:Name="CautareBox" Width="500" Height="40" FontSize="20" VerticalContentAlignment="Center"/>
-                <Button Content="Cauti" Click="AfisareaJocCautatClick" Width="80" Height="40" Margin="5,5,5,5"/>
-                <Border Name="DescJocuriCautare" CornerRadius="10" Background="White" Padding="15" HorizontalAlignment="Center" MaxHeight="400" Width="400" VerticalAlignment="Top" Margin="0,0,0,10" Visibility="Collapsed">
-                    <Border.Effect>
-                        <DropShadowEffect BlurRadius="15" Direction="270" Opacity="0.5"/>
-                    </Border.Effect>
-                    <ScrollViewer VerticalScrollBarVisibility="Visible">
-                        <TextBlock x:Name="DescJocCautat" Text="" TextWrapping="Wrap"/>
-                    </ScrollViewer>
-                </Border>
-            </StackPanel>
+                <DataGrid  Grid.Row="1" 
+                           x:Name="dgJocuriGasiti"
+                           AutoGenerateColumns="False"
+                           RowHeight="26"
+                           GridLinesVisibility="All"
+                           HeadersVisibility="Column"
+                           AlternatingRowBackground="#F5F5F5"
+                           CanUserAddRows="False"
+                           CanUserDeleteRows="False"
+                           IsReadOnly="True"
+                           Margin="5"
+                           Visibility="Hidden">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Width="Auto" Binding="{Binding InternalId}"/>
+                        <DataGridTextColumn Header="Denumirea" Width="Auto" Binding="{Binding Denumirea}"/>
+                        <DataGridTextColumn Header="Pret" Width="Auto" Binding="{Binding Pret}"/>
+                        <DataGridTextColumn Header="Genre" Width="Auto" Binding="{Binding GenreStr}"/>
+                        <DataGridTextColumn Header="Platforme" Width="Auto" Binding="{Binding Platforme}"/>
+                        <DataGridTextColumn Header="Rate" Width="Auto" Binding="{Binding Rate}"/>
+                        <DataGridTextColumn Header="Editori" Width="Auto" Binding="{Binding EditoriStr}"/>
+                        <DataGridTextColumn Header="Dezvoltatori" Width="Auto" Binding="{Binding DezvoltatoriStr}"/>
+                        <DataGridTextColumn Header="Varsta" Width="Auto" Binding="{Binding Varsta}"/>
+                        <DataGridTextColumn Header="Anul" Width="Auto" Binding="{Binding Anul}"/>
+                        <DataGridTextColumn Header="Disponibil" Width="Auto" Binding="{Binding EsteDisponibil}"/>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

@@ -1,5 +1,5 @@
 ﻿using System;
-using EnumGestionare;
+using DespreJoc.Enums;
 using System.IO;
 
 namespace DespreJoc
@@ -33,13 +33,13 @@ namespace DespreJoc
         }
         public RatingVarsta Varsta { get; private set; }
         public int Anul { get; private set; }
-        public bool EsteSters { get; private set; }
+        public bool EsteDisponibil { get; private set; }
 
         //constante
-        private const char SEPARATOR_PRINCIPAL_FISIER = ';';
+        public const char SEPARATOR_PRINCIPAL_FISIER = ';';
         private const char SEPARATOR_SECUNDAR_FISIER = '|';
         private const int INTERNAL_ID = 0;
-        private const int DENUMIREA = 1;
+        public const int DENUMIREA = 1;
         private const int PRETUL = 2;
         private const int RATING = 3;
         private const int GENRE = 4;
@@ -48,7 +48,7 @@ namespace DespreJoc
         private const int EDITORI = 7;
         private const int VARSTA = 8;
         private const int ANUL = 9;
-        private const int ESTE_STERS = 10;
+        private const int ESTE_DISPONIBIL = 10;
 
         public const double RATE_MIN = 1;
         public const double RATE_MAX = 10;
@@ -58,10 +58,9 @@ namespace DespreJoc
 
         //metode
         public void setInternalId(int id) { InternalId = id; }
-        public void setEsteSters(bool setter) { EsteSters = setter; }
 
         //constructor
-        public Joc(string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<string> Editori, List<string> Dezvoltatori, double Rate, RatingVarsta RatingVarsta, int Anul)
+        public Joc(string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<string> Editori, List<string> Dezvoltatori, double Rate, RatingVarsta RatingVarsta, int Anul, bool EsteDisponibil)
         {
             this.Denumirea = Denumirea;
             this.Pret = Pret;
@@ -72,7 +71,7 @@ namespace DespreJoc
             this.Dezvoltatori = Dezvoltatori;
             this.Varsta = RatingVarsta;
             this.Anul = Anul;
-            EsteSters = false;
+            this.EsteDisponibil = EsteDisponibil;
         }
 
         public Joc(string linieStr)
@@ -94,7 +93,7 @@ namespace DespreJoc
             if (Enum.TryParse(date[VARSTA], true, out RatingVarsta Varsta)) { this.Varsta = Varsta; }
 
             this.Anul = Convert.ToInt32(date[ANUL]);
-            this.EsteSters = Convert.ToBoolean(date[ESTE_STERS]);
+            this.EsteDisponibil = Convert.ToBoolean(date[ESTE_DISPONIBIL]);
         }
 
         public string FormatareJoculuiInStr()
@@ -117,11 +116,11 @@ namespace DespreJoc
                                                 sEditori ?? "NECUNOSCUT",
                                                 Varsta.ToString() ?? "PEGI3",
                                                 Anul.ToString() ?? "NECUNOSCUT",
-                                                EsteSters);//{11}
+                                                EsteDisponibil);//{11}
             return formatFinal;
         }
 
-        public string GetInfo(bool userMod = true)
+        public string GetInfo()
         {
             string info = $"Detalii jocului: {Denumirea}\nPretul: {Pret}\nRating: {Rate}/10";
             info += "\nGenre:\n\t" + string.Join("\n\t", Genre);
@@ -130,13 +129,9 @@ namespace DespreJoc
             info += "\nEditori:\n\t" + string.Join("\n\t", Editori);
             info += "\nRating de Varsta:\n\t" + Varsta.ToString();
             info += "\nAnul:\n\t" + Anul;
-
-            if (userMod) return info;
-            else
-            {
-                info += "\nEsteSters:\n\t" + EsteSters;
-                return info;
-            }
+            info += "\nEsteDisponibil:\n\t" + EsteDisponibil;
+                
+            return info;
         }
     }
 }

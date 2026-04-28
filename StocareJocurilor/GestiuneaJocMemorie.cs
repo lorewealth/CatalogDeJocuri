@@ -1,5 +1,5 @@
 ﻿using DespreJoc;
-using EnumGestionare;
+using DespreJoc.Enums;
 
 namespace StocareJocurilor
 {
