@@ -1,7 +1,7 @@
 ﻿using System;
 using DespreJoc;
+using DespreJoc.Enums;
 using StocareJocurilor;
-using EnumGestionare;
 using CatalogDeJocuri;
 
 namespace ProiectCatalogDeJocuri
@@ -337,7 +337,7 @@ namespace ProiectCatalogDeJocuri
 
             varsta = (RatingVarsta)varstaSelectata;
 
-            return new Joc(denumirea, pret, genre, platforme, editori, dezvoltatori, rate, varsta, 2000);
+            return new Joc(denumirea, pret, genre, platforme, editori, dezvoltatori, rate, varsta, 2000, true);
         }
     }
 }

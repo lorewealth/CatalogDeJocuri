@@ -7,10 +7,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Navigation;
-using EnumGestionare;
 using DespreJoc;
+using DespreJoc.Enums;
 
-namespace WPF
+namespace WPF.Validatori
 {
     class JocInput
     {
@@ -57,7 +57,7 @@ namespace WPF
                 valid = false;
                 ErrHandler(ErrRate, Rate, "Introduceti o rata!");
             }
-            else if (!double.TryParse(rateWPF, out double rateD) || (rateD < Joc.RATE_MIN || rateD > Joc.RATE_MAX))
+            else if (!double.TryParse(rateWPF, out double rateD) || rateD < Joc.RATE_MIN || rateD > Joc.RATE_MAX)
             {
                 valid = false;
                 ErrHandler(ErrRate, Rate, $"Introduceti o rata intre {Joc.RATE_MIN}-{Joc.RATE_MAX}!");
@@ -132,7 +132,7 @@ namespace WPF
                 valid = false;
                 ErrHandler(ErrAnul, Anul, "Introduceti un an!");
             }
-            else if (!int.TryParse(AnulWPF, out int anulI) || (anulI < Joc.ANUL_MIN || anulI > Joc.ANUL_MAX))
+            else if (!int.TryParse(AnulWPF, out int anulI) || anulI < Joc.ANUL_MIN || anulI > Joc.ANUL_MAX)
             {
                 valid = false;
                 ErrHandler(ErrAnul, Anul, $"Introduceti un an valid intre {Joc.ANUL_MIN} - {Joc.ANUL_MAX}");

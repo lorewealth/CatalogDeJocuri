@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CatalogDeJocuri\CatalogDeJocuri.csproj" />
-    <ProjectReference Include="..\EnumGestionare\EnumGestionare.csproj" />
     <ProjectReference Include="..\Joc\DespreJoc.csproj" />
     <ProjectReference Include="..\StocareJocurilor\StocareJocurilor.csproj" />
   </ItemGroup>
