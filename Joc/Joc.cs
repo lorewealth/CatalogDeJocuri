@@ -32,7 +32,7 @@ namespace DespreJoc
             private set;
         }
         public RatingVarsta Varsta { get; private set; }
-        public int Anul { get; private set; }
+        public DateTime ReleaseData { get; private set; }
         public bool EsteDisponibil { get; private set; }
 
         //constante
@@ -47,20 +47,19 @@ namespace DespreJoc
         private const int DEZVOLTATORI = 6;
         private const int EDITORI = 7;
         private const int VARSTA = 8;
-        private const int ANUL = 9;
+        private const int RELEASE_DATA = 9;
         private const int ESTE_DISPONIBIL = 10;
 
         public const double RATE_MIN = 1;
         public const double RATE_MAX = 10;
-        public const int ANUL_MIN = 1958;
-        public const int ANUL_MAX = 2050;
-
+        public const int RELEASE_DATA_ANUL_MIN = 1958;
+        public const int RELEASE_DATA_ANUL_MAX = 2050;
 
         //metode
         public void setInternalId(int id) { InternalId = id; }
 
         //constructor
-        public Joc(string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<string> Editori, List<string> Dezvoltatori, double Rate, RatingVarsta RatingVarsta, int Anul, bool EsteDisponibil)
+        public Joc(string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<string> Editori, List<string> Dezvoltatori, double Rate, RatingVarsta RatingVarsta, DateTime ReleaseData, bool EsteDisponibil)
         {
             this.Denumirea = Denumirea;
             this.Pret = Pret;
@@ -70,7 +69,7 @@ namespace DespreJoc
             this.Editori = Editori;
             this.Dezvoltatori = Dezvoltatori;
             this.Varsta = RatingVarsta;
-            this.Anul = Anul;
+            this.ReleaseData = ReleaseData;
             this.EsteDisponibil = EsteDisponibil;
         }
 
@@ -92,7 +91,7 @@ namespace DespreJoc
             }
             if (Enum.TryParse(date[VARSTA], true, out RatingVarsta Varsta)) { this.Varsta = Varsta; }
 
-            this.Anul = Convert.ToInt32(date[ANUL]);
+            this.ReleaseData = Convert.ToDateTime(date[RELEASE_DATA]);
             this.EsteDisponibil = Convert.ToBoolean(date[ESTE_DISPONIBIL]);
         }
 
@@ -115,7 +114,7 @@ namespace DespreJoc
                                                 sDezvoltatori ?? "NECUNOSCUT",
                                                 sEditori ?? "NECUNOSCUT",
                                                 Varsta.ToString() ?? "PEGI3",
-                                                Anul.ToString() ?? "NECUNOSCUT",
+                                                ReleaseData.ToString("yyyy.MM.dd") ?? "NECUNOSCUT",
                                                 EsteDisponibil);//{11}
             return formatFinal;
         }
@@ -128,7 +127,7 @@ namespace DespreJoc
             info += "\nDezvoltatori:\n\t" + string.Join("\n\t", Dezvoltatori);
             info += "\nEditori:\n\t" + string.Join("\n\t", Editori);
             info += "\nRating de Varsta:\n\t" + Varsta.ToString();
-            info += "\nAnul:\n\t" + Anul;
+            info += "\nReleaseDate:\n\t" + ReleaseData;
             info += "\nEsteDisponibil:\n\t" + EsteDisponibil;
                 
             return info;

@@ -337,7 +337,7 @@ namespace ProiectCatalogDeJocuri
 
             varsta = (RatingVarsta)varstaSelectata;
 
-            return new Joc(denumirea, pret, genre, platforme, editori, dezvoltatori, rate, varsta, 2000, true);
+            return new Joc(denumirea, pret, genre, platforme, editori, dezvoltatori, rate, varsta, DateTime.Today, true);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace WPF.Validatori
             {
                 case "pret":
                 case "rate":
-                case "anul":
+                case "releasedata":
                     if(strArrPRA.Length <= 1 || strArrPRA.Length > 2) return false;
                     foreach (string item in strArrPRA) 
                     {  
@@ -29,7 +29,7 @@ namespace WPF.Validatori
 
                         if (categoria == "pret" && val < 0) return false;
                         if (categoria == "rate" && (val < Joc.RATE_MIN || val > Joc.RATE_MAX)) return false;
-                        if (categoria == "anul" && (val < Joc.ANUL_MIN || val > Joc.ANUL_MAX)) return false;
+                        if (categoria == "releasedata" && ((int)val < Joc.RELEASE_DATA_ANUL_MIN || (int)val > Joc.RELEASE_DATA_ANUL_MAX)) return false;
                     }
                     return true;
                 default: //pentru restul: dezvoltatori, editori, denumire
