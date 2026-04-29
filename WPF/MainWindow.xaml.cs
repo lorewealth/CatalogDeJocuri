@@ -23,9 +23,6 @@ namespace WPF
     {
         IStocare AdministrJocuri = Decident.PrelucrareaDatelor();
         List<Joc> Jocuri;
-        protected const int RATE_MIN = 1;
-        protected const int RATE_MAX = 10;
-
 
         public MainWindow()
         {
@@ -40,28 +37,43 @@ namespace WPF
         }
 
         //click metode pentru butoane
-        private void AdministrJocuriClick(object sender, RoutedEventArgs e)
+        private void btnMeniuAdministrJocuri_Click(object sender, RoutedEventArgs e)
         {
             CautareJoculPanel.Visibility = Visibility.Collapsed;
             AdministJocPanel.Visibility = Visibility.Visible;
             dgJocuri.Visibility = Visibility.Visible;
+            ModificareMeniuPanel.Visibility = Visibility.Collapsed;
             AfisareJocuri();
+            Rezultat.Visibility = Visibility.Collapsed;
             StergeInput();
         }
-        private void CautareJocClick(object sender, RoutedEventArgs e)
+        private void btnMeniuCautareJocuri_Click(object sender, RoutedEventArgs e)
         {
             AdministJocPanel.Visibility = Visibility.Collapsed;
             dgJocuri.Visibility= Visibility.Collapsed;
+            ModificareMeniuPanel.Visibility = Visibility.Collapsed;
             CautareJoculPanel.Visibility = Visibility.Visible;
         }
 
-        private void AdaugaJocClick(object sender, RoutedEventArgs e)
+        private void btnMeniuModificareJoc_Click(object sender, RoutedEventArgs e)
+        {
+            AdministJocPanel.Visibility = Visibility.Collapsed;
+            dgJocuri.Visibility = Visibility.Collapsed;
+            dgJocuriGasiti.Visibility = Visibility.Collapsed;
+            CautareJoculPanel.Visibility = Visibility.Collapsed;
+            ModificareMeniuPanel.Visibility = Visibility.Visible;
+
+            lstModificareJoacaComboBox.ItemsSource = Jocuri;
+            lstModifJoacaVarstaListBox.ItemsSource = Enum.GetValues(typeof(RatingVarsta));
+            lstModifJoacaPlatformeListBox.ItemsSource = Enum.GetValues(typeof(PlatformeDisponibile));
+        }
+
+        private void btnAdaugaJoc_Click(object sender, RoutedEventArgs e)
         {
             //valideaza input a userului
-            if (!JocInput.ValidareJocInput(Denumirea, Pret, Rate, Genre, SelectatorPlatforme, Editori, Dezvoltatori, SelectatorVarsta, Anul,
-                                           ErrDenumirea, ErrPret, ErrRate, ErrGenre, ErrPlatforme, ErrEditori, ErrDezvoltatori, ErrVarsta, ErrAnul))
+            if (!JocInput.ValidareJocInput(Denumirea, Pret, Rate, Genre, SelectatorPlatforme, Editori, Dezvoltatori, SelectatorVarsta, ReleaseData,
+                                           ErrDenumirea, ErrPret, ErrRate, ErrGenre, ErrPlatforme, ErrEditori, ErrDezvoltatori, ErrVarsta, ErrReleaseData))
             {
-                DescJocuri.Visibility = Visibility.Collapsed;
                 return;
             }
 
@@ -90,21 +102,19 @@ namespace WPF
             if (Enum.TryParse(typeof(RatingVarsta), SelectatorVarsta.Text, out object vrst));
             RatingVarsta VarstaForm = (RatingVarsta)vrst;
 
-            int.TryParse(Anul.Text, out int AnulI);
-
             bool eDisponibil = false;
             if (eDisponibilCheckBox.IsChecked == true) eDisponibil = true;
 
- 
+            DateTime ReleaseDataForm = ReleaseData.SelectedDate ?? DateTime.Today;
+
             //adaug joc
-            AdministrJocuri.AddJoc(new Joc(Denumirea.Text, PretForm, GenreForm, Platformele, EditoriForm, DezvoltatoriForm, RataForm, VarstaForm, AnulI, eDisponibil));
+            AdministrJocuri.AddJoc(new Joc(Denumirea.Text, PretForm, GenreForm, Platformele, EditoriForm, DezvoltatoriForm, RataForm, VarstaForm, ReleaseDataForm, eDisponibil));
 
             //mesaj de success
             Rezultat.Visibility = Visibility.Visible;
             Rezultat.Text = "Joaca a fost adaugata cu succes!";
             Rezultat.Foreground = Brushes.White;
             Rezultat.Background = Brushes.DarkGreen;
-            DescJocuri.Visibility = Visibility.Collapsed;
 
             //afisam joc adaugat in datagrid
             AfisareJocuri();
@@ -113,14 +123,13 @@ namespace WPF
             StergeInput();
         }
 
-        private void StergeUltJocClick(object sender, RoutedEventArgs e)
+        private void btnStergeUltJoc_Click(object sender, RoutedEventArgs e)
         {
             if (!AdministrJocuri.RemoveUltJoc())
             {
                 Rezultat.Text = "Nu exista nici o joaca!";
                 Rezultat.Foreground = Brushes.White;
                 Rezultat.Background = Brushes.Crimson;
-                DescJocuri.Visibility = Visibility.Collapsed;
                 return;
             }
             Jocuri = AdministrJocuri.GetJocuri();
@@ -129,12 +138,11 @@ namespace WPF
             Rezultat.Text           = "Joaca a fost sters cu succes!";
             Rezultat.Foreground     = Brushes.White;
             Rezultat.Background     = Brushes.DarkGreen;
-            DescJocuri.Visibility   = Visibility.Collapsed;
 
             AfisareJocuri();
         }
 
-        private void AfisareaJocCautatClick(object sender, RoutedEventArgs e)
+        private void btnAfisareaJocCautat_Click(object sender, RoutedEventArgs e)
         {
             string categoria = CautareRadButton().ToLower();
             string criteriu = CautareBox.Text;
@@ -176,8 +184,24 @@ namespace WPF
                     break;
                 case "pret":
                 case "rate":
-                case "anul":
+                case "releasedata":
                     string[] strArrPRA = criteriu.Split('-', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                    if(categoria == "releasedata")
+                    {
+                        //---temporar
+                        // Concatenez la primul si al doilea element(care sunt anii) luna, ziua si ora,
+                        // pentru a putea compara cu data selectata
+                        //---
+                        DateTime inceputT = Convert.ToDateTime($"{strArrPRA[0]}.01.01");
+                        DateTime sfarsitT = Convert.ToDateTime($"{strArrPRA[1]}.01.01");
+
+                        if (inceputT > sfarsitT)
+                            (inceputT, sfarsitT) = (sfarsitT, inceputT);
+
+                        joculGasit = Jocuri.Where(joc => joc.ReleaseData >= inceputT && joc.ReleaseData <= sfarsitT).ToList();
+                        break;
+                    }
                     double inceput = Convert.ToDouble(strArrPRA[0]);
                     double sfarsit = Convert.ToDouble(strArrPRA[1]);
 
@@ -186,7 +210,6 @@ namespace WPF
 
                     if (categoria == "pret") joculGasit = Jocuri.Where(joc => joc.Pret >= inceput && joc.Pret <= sfarsit).ToList();
                     if (categoria == "rate") joculGasit = Jocuri.Where(joc => joc.Rate >= inceput && joc.Rate <= sfarsit).ToList();
-                    if (categoria == "anul") joculGasit = Jocuri.Where(joc => joc.Anul >= inceput && joc.Anul <= sfarsit).ToList();
 
                     break;
                 default:
@@ -206,6 +229,18 @@ namespace WPF
 
         }
 
+        private void btnModificareaJocului_Click(object sender, RoutedEventArgs e)
+        {
+            if (!JocInput.ValidareJocInput(lstModificareJoacaComboBox, ModifJoacaPretTextBox, ModifJoacaRateTextBox, ModifJoacaGenreTextBox, lstModifJoacaPlatformeListBox, ModifJoacaEditoriTextBox, ModifJoacaDezvoltatoriTextBox, lstModifJoacaVarstaListBox, ModifJoacaReleaseData,
+                               ErrModifSelectJoaca, ErrModifPret, ErrModifRate, ErrModifGenre, ErrModifPlatforme, ErrModifEditori, ErrModifDezvoltatori, ErrModifRatingVarsta, ErrModifReleaseData))
+            {
+                return; 
+            }
+
+            //AdministrJocuri.UpdateJoc(new Joc());
+
+        }
+
         //metoda de a sterge input-ul vechi
         private void StergeInput()
         {
@@ -221,12 +256,12 @@ namespace WPF
             Editori.Text = "";
             Dezvoltatori.Text = "";
             SelectatorVarsta.SelectedIndex = 0;
-            Anul.Text = "";
+            ReleaseData.SelectedDate = null;
             eDisponibilCheckBox.IsChecked = false;
         }
 
         //metoda de a prelua de la radiobuton continut
-        private string CautareRadButton () 
+        private string CautareRadButton() 
         {
             // imi place stilul acest de cod tbh
             if (DenumireaRadButton.IsChecked    == true)         return DenumireaRadButton.Content.ToString();
@@ -237,7 +272,7 @@ namespace WPF
             if (EditoriRadButton.IsChecked      == true)         return EditoriRadButton.Content.ToString();
             if (DezvoltatoriRadButton.IsChecked == true)         return DezvoltatoriRadButton.Content.ToString();
             if (VarstaRadButton.IsChecked       == true)         return VarstaRadButton.Content.ToString();
-            if (AnulRadButton.IsChecked         == true)         return AnulRadButton.Content.ToString();
+            if (ReleaseDataRadButton.IsChecked  == true)         return ReleaseDataRadButton.Content.ToString();
 
             else return DenumireaRadButton.Content.ToString();
         }

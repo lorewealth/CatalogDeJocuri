@@ -1,15 +1,15 @@
-1;Crusader Kings III;8,8;9,5;Strategy|Grand Strategy|Medieval;Steam;Paradox Development Studio;Paradox Interactive;PEGI12;2020;True
-2;Crusader Kings II;0;9;Grand Strategy|Strategy|Medieval;Steam;Paradox Development Studio;Paradox Interactive;PEGI12;2012;True
-3;The Elder Scrolls V: Skyrim;8,9;9,9;Open World|Quest|Fantasy;Steam|GOG;Bethesda Game Studios;Bethesda Softworks;PEGI18;2009;True
-4;Factorio;35;9,6;Automation|Base Building;Steam;Wube Software;Wube Software;PEGI3;2020;True
-5;Sid Meier's Civilization VI;5,99;8,5;Turn-Based Strategy|Historical|Strategy;Steam|Epic;Firaxis Games|Aspyr(Mac)|Aspyr(Linux);2K|Aspyr(Mac)|Aspyr(Linux);PEGI12;2004;True
-6;Half-Life 2;9,99;9,6;Sci-fi|Action|FPS|Classic;Steam;Valve;Valve;PEGI16;2004;True
-7;Battlefield 1;39,99;8,5;FPS|World War I|War|Shooter;Steam|Epic;DICE;Electronic Arts;PEGI18;2020;True
-8;Minecraft;29,99;8,5;Sandbox|Open-World|Simulator;Steam;Mojang;Mojang;PEGI7;2011;True
-9;Total War: Warhammer III;30;9,7;Turn-Based Strategy|Strategy;Steam;CREATIVE ASSEMBLY|Feral Interactive;SEGA|Feral Interactive;PEGI16;2022;True
-10;Total War: Attila;25;9,9;Turn-Based Strategy|Strategy|Historical|War;Steam|Epic|GOG|itchIo;CREATIVE ASSEMBLY;SEGA;PEGI16;2015;True
-11;TestDen;9999,99;9,9999;TestGen;Steam|Epic|GOG;TestDezv;TestEdit;PEGI12;2000;True
-12;Kerbal Space Program;39,99;9,4;Space|Simulation|Sandbox|Physics;Steam|GOG;Squad;Private Division;PEGI7;2015;True
-13;Europa Universalis IV;7,99;8,9;Strategy|Colonization;Steam|GOG;Paradox Development Studio;Paradox Interactive;PEGI12;2013;True
-14;Europa Universalis V;59,99;7,09;Grand Strategy|Resource Management;Steam;Paradox Tinto;Paradox Interactive;PEGI12;2025;False
-15;Garry's Mod;9,99;9,61;Sandbox|Moddable|Physics|Building;Steam;Facepunch Studios;Valve;PEGI12;2006;True
+1;Crusader Kings III;8,8;9,5;Strategy|Grand Strategy|Medieval;Steam;Paradox Development Studio;Paradox Interactive;PEGI12;2020.09.01;True
+2;Crusader Kings II;0;9;Grand Strategy|Strategy|Medieval;Steam;Paradox Development Studio;Paradox Interactive;PEGI12;2012.02.14;True
+3;The Elder Scrolls V: Skyrim;8,9;9,9;Open World|Quest|Fantasy;Steam|GOG;Bethesda Game Studios;Bethesda Softworks;PEGI18;2011.11.11;True
+4;Factorio;35;9,6;Automation|Base Building;Steam;Wube Software;Wube Software;PEGI3;2020.08.14;True
+5;Sid Meier's Civilization VI;5,99;8,5;Turn-Based Strategy|Historical|Strategy;Steam|Epic;Firaxis Games|Aspyr(Mac)|Aspyr(Linux);2K|Aspyr(Mac)|Aspyr(Linux);PEGI12;2016.10.21;True
+6;Half-Life 2;9,99;9,6;Sci-fi|Action|FPS|Classic;Steam;Valve;Valve;PEGI16;2004.11.16;True
+7;Battlefield 1;39,99;8,5;FPS|World War I|War|Shooter;Steam|Epic;DICE;Electronic Arts;PEGI18;2020.06.11;True
+8;Minecraft;29,99;8,5;Sandbox|Open-World|Simulator;Steam;Mojang;Mojang;PEGI7;2011.11.01;True
+9;Total War: Warhammer III;30;9,7;Turn-Based Strategy|Strategy;Steam;CREATIVE ASSEMBLY|Feral Interactive;SEGA|Feral Interactive;PEGI16;2022.02.17;True
+10;Total War: Attila;25;9,9;Turn-Based Strategy|Strategy|Historical|War;Steam|Epic|GOG|itchIo;CREATIVE ASSEMBLY;SEGA;PEGI16;2015.02.17;True
+11;Kerbal Space Program;39,99;9,4;Space|Simulation|Sandbox|Physics;Steam|GOG;Squad;Private Division;PEGI7;2015.04.27;True
+12;Europa Universalis IV;7,99;8,9;Strategy|Colonization;Steam|GOG;Paradox Development Studio;Paradox Interactive;PEGI12;2013.08.13;True
+13;Europa Universalis V;59,99;7,09;Grand Strategy|Resource Management;Steam;Paradox Tinto;Paradox Interactive;PEGI12;2025.11.04;False
+14;Garry's Mod;9,99;9,61;Sandbox|Moddable|Physics|Building;Steam;Facepunch Studios;Valve;PEGI12;2006.11.29;True
+15;s&box;19,99;6,5;Sandbox|Game Development|Building;Steam;Facepunch Studios;Facepunch Studios;PEGI16;2026.04.28;True

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
-        Title="Catalog de Jocuri" Height="500" Width="800"
+        Title="Catalog de Jocuri" Height="800" Width="1200"
         WindowStyle="SingleBorderWindow"
         WindowState="Maximized"
         Background="Bisque">
@@ -21,15 +21,17 @@
                     <Setter Property="Height" Value="50"/>
                 </Style>
             </StackPanel.Resources>
-            <Button Content="Administrarea Jocurilor" Click="AdministrJocuriClick"/>
-            <Button Content="Cauta" Click="CautareJocClick"/>
+            <Button Content="Administrarea Jocurilor" Click="btnMeniuAdministrJocuri_Click"/>
+            <Button Content="Cauta" Click="btnMeniuCautareJocuri_Click"/>
+            <Button Content="Modificare" Click="btnMeniuModificareJoc_Click"/>
         </StackPanel>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <StackPanel x:Name="AdministJocPanel" Visibility="Visible" Grid.Row="0">
+            <!-- Adaugare -->
+            <StackPanel x:Name="AdministJocPanel" Visibility="Collapsed" Grid.Row="0">
                 <Label Content="Introducerea Jocului" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -104,14 +106,14 @@
                         <TextBlock x:Name="ErrVarsta" Text="Rating de Varsta Invalida" Foreground="Crimson" Visibility="Collapsed"/>
                     </StackPanel>
                 </Grid>
-                <StackPanel>
-                    <Label Content="Anul: " Padding="0" HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBox x:Name="Anul" HorizontalAlignment="Center" Height="25" Width="100"/>
-                        <CheckBox x:Name="eDisponibilCheckBox" Content="Este disponibil" Margin="10"/>
+                        <StackPanel>
+                            <Label Content="Anul" Padding="0" HorizontalAlignment="Center" Target="{Binding ElementName=ReleaseData}"/>
+                            <DatePicker Name="ReleaseData" Margin="5" DisplayDateStart="1958-01-01" DisplayDateEnd="2050-01-01"/>
+                            <TextBlock x:Name="ErrReleaseData" Text="Anul Invalid" Foreground="Crimson" Visibility="Collapsed" HorizontalAlignment="Center" Width="Auto"/>
+                        </StackPanel>
+                        <CheckBox x:Name="eDisponibilCheckBox" Content="Este disponibil" Margin="25"/>
                     </StackPanel>
-                    <TextBlock x:Name="ErrAnul" Text="Anul Invalid" Foreground="Crimson" Visibility="Collapsed" HorizontalAlignment="Center" Width="Auto"/>
-                </StackPanel>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
                     <StackPanel.Resources>
@@ -120,18 +122,10 @@
                         </Style>
                     </StackPanel.Resources>
                     <StackPanel></StackPanel>
-                    <Button Content="Adauga Joc" Click="AdaugaJocClick" Width="90" Height="30"/>
-                    <Button Content="Sterge Ultimul Joc" Click="StergeUltJocClick" Width="120" Height="30"/>
+                    <Button Content="Adauga Joc" Click="btnAdaugaJoc_Click" Width="90" Height="30"/>
+                    <Button Content="Sterge Ultimul Joc" Click="btnStergeUltJoc_Click" Width="120" Height="30"/>
                 </StackPanel>
                 <TextBlock x:Name="Rezultat" Text="" Padding="5" Width="Auto" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                <Border Name="DescJocuri" CornerRadius="10" Background="White" Padding="15" HorizontalAlignment="Center" MaxHeight="400" Width="400" VerticalAlignment="Top" Margin="0,0,0,10" Visibility="Collapsed">
-                    <Border.Effect>
-                        <DropShadowEffect BlurRadius="15" Direction="270" Opacity="0.5"/>
-                    </Border.Effect>
-                    <ScrollViewer VerticalScrollBarVisibility="Visible">
-                        <TextBlock x:Name="DescJocSing" Text="" TextWrapping="Wrap"/>
-                    </ScrollViewer>
-                </Border>
             </StackPanel>
             <DataGrid 
                 x:Name="dgJocuri"
@@ -146,7 +140,7 @@
                 CanUserDeleteRows="False"
                 IsReadOnly="True"
                 Margin="5"
-                Visibility="Visible"
+                Visibility="Collapsed"
                 >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Width="Auto" Binding="{Binding InternalId}"/>
@@ -158,7 +152,7 @@
                     <DataGridTextColumn Header="Editori" Width="Auto" Binding="{Binding EditoriStr}"/>
                     <DataGridTextColumn Header="Dezvoltatori" Width="Auto" Binding="{Binding DezvoltatoriStr}"/>
                     <DataGridTextColumn Header="Varsta" Width="Auto" Binding="{Binding Varsta}"/>
-                    <DataGridTextColumn Header="Anul" Width="Auto" Binding="{Binding Anul}"/>
+                    <DataGridTextColumn Header="Release data" Width="Auto" Binding="{Binding ReleaseData, StringFormat=\{0:yyyy.MM.dd\}}"/>
                     <DataGridTextColumn Header="Disponibil" Width="Auto" Binding="{Binding EsteDisponibil}"/>
                 </DataGrid.Columns>
             </DataGrid>
@@ -190,13 +184,13 @@
                         <RadioButton x:Name="EditoriRadButton" Content="Editori"/>
                         <RadioButton x:Name="DezvoltatoriRadButton" Content="Dezvoltatori"/>
                         <RadioButton x:Name="VarstaRadButton" Content="Varsta"/>
-                        <RadioButton x:Name="AnulRadButton" Content="Anul"/>
+                        <RadioButton x:Name="ReleaseDataRadButton" Content="ReleaseData"/>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center">
                         <TextBox x:Name="CautareBox" Width="500" Height="40" FontSize="20"/>
                         <TextBlock x:Name="ErrCautareBox" Text="Error" Visibility="Collapsed" Foreground="Red"/>
                     </StackPanel>
-                    <Button Content="Cauti" Click="AfisareaJocCautatClick" Width="80" Height="40" Margin="5,5,5,5"/>
+                    <Button Content="Cauti" Click="btnAfisareaJocCautat_Click" Width="80" Height="40" Margin="5"/>
                 </StackPanel>
                 <DataGrid  Grid.Row="1" 
                            x:Name="dgJocuriGasiti"
@@ -220,11 +214,119 @@
                         <DataGridTextColumn Header="Editori" Width="Auto" Binding="{Binding EditoriStr}"/>
                         <DataGridTextColumn Header="Dezvoltatori" Width="Auto" Binding="{Binding DezvoltatoriStr}"/>
                         <DataGridTextColumn Header="Varsta" Width="Auto" Binding="{Binding Varsta}"/>
-                        <DataGridTextColumn Header="Anul" Width="Auto" Binding="{Binding Anul}"/>
+                        <DataGridTextColumn Header="Release data" Width="Auto" Binding="{Binding ReleaseData, StringFormat=\{0:yyyy.MM.dd\}}"/>
                         <DataGridTextColumn Header="Disponibil" Width="Auto" Binding="{Binding EsteDisponibil}"/>
                     </DataGrid.Columns>
-
                 </DataGrid>
+            </Grid>
+            <!-- Modificare panel-->
+            <Grid x:Name="ModificareMeniuPanel">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="10">
+                    <TextBlock Text="Selectati joaca: "/>
+                    <ComboBox x:Name="lstModificareJoacaComboBox" Width="200" DisplayMemberPath="Denumirea" IsEditable="True"/>
+                    <TextBlock x:Name="ErrModifSelectJoaca" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                </StackPanel>
+                <Grid Grid.Row="1" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Margin" Value="5"/>
+                        </Style>
+                    </Grid.Resources>
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <TextBlock Text="Pret: "/>
+                        <TextBox 
+                            x:Name="ModifJoacaPretTextBox" 
+                            Width="200" Height="35" 
+                            Text="{Binding ElementName=lstModificareJoacaComboBox, Path=SelectedItem.Pret, Mode=OneWay}"/>
+                        <TextBlock x:Name="ErrModifPret" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1">
+                        <TextBlock Text="Rate: "/>
+                        <TextBox 
+                            x:Name="ModifJoacaRateTextBox" 
+                            Width="200" Height="35" 
+                            Text="{Binding ElementName=lstModificareJoacaComboBox, Path=SelectedItem.Rate, Mode=OneWay}"/>
+                        <TextBlock x:Name="ErrModifRate" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2">
+                        <TextBlock Text="Genre: "/>
+                        <TextBox 
+                            x:Name="ModifJoacaGenreTextBox" 
+                            Width="200" Height="35" 
+                            Text="{Binding ElementName=lstModificareJoacaComboBox, Path=SelectedItem.GenreStr, Mode=OneWay}"/>
+                        <TextBlock x:Name="ErrModifGenre" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0">
+                        <TextBlock Text="Release data: "/>
+                        <DatePicker 
+                            x:Name="ModifJoacaReleaseData" 
+                            Width="200" Height="35" 
+                            SelectedDate="{Binding ElementName=lstModificareJoacaComboBox, Path=SelectedItem.ReleaseData, Mode=OneWay}"/>
+                        <TextBlock x:Name="ErrModifReleaseData" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1">
+                        <TextBlock Text="Editori: "/>
+                        <TextBox 
+                            x:Name="ModifJoacaEditoriTextBox" 
+                            Width="200" Height="35" 
+                            Text="{Binding ElementName=lstModificareJoacaComboBox, Path=SelectedItem.EditoriStr, Mode=OneWay}"/>
+                        <TextBlock x:Name="ErrModifEditori" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="2">
+                        <TextBlock Text="Dezvoltatori: "/>
+                        <TextBox 
+                            x:Name="ModifJoacaDezvoltatoriTextBox"
+                            Width="200" Height="35" 
+                            Text="{Binding ElementName=lstModificareJoacaComboBox, Path=SelectedItem.DezvoltatoriStr, Mode=OneWay}"/>
+                        <TextBlock x:Name="ErrModifDezvoltatori" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="0">
+                        <TextBlock Text="Rating Varsta: "/>
+                        <ListBox 
+                            x:Name="lstModifJoacaVarstaListBox" 
+                            Width="200" Height="100" 
+                            SelectedValue="{Binding ElementName=lstModificareJoacaComboBox, Path=SelectedItem.Varsta, Mode=OneWay}"
+                            />
+                        <TextBlock x:Name="ErrModifRatingVarsta" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1">
+                        <TextBlock Text="Platforme: "/>
+                        <ListBox 
+                            x:Name="lstModifJoacaPlatformeListBox" 
+                            Width="200" Height="100" 
+                            SelectedValue="{Binding ElementName=lstModificareJoacaComboBox, Path=SelectedItem.Platforme, Mode=OneWay}"
+                            SelectionMode="Multiple"/>
+                        <TextBlock x:Name="ErrModifPlatforme" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
+                        <TextBlock Text="Este Disponibil: " Margin="0,0,5,0"/>
+                        <CheckBox 
+                            x:Name="ModifJoacaEsteDispobinilCheckBox" 
+                            Width="Auto" Height="Auto"
+                            IsChecked="{Binding ElementName=lstModificareJoacaComboBox, Path=SelectedItem.EsteDisponibil, Mode=OneWay}"
+/>
+                    </StackPanel>
+                </Grid>
+                <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="10">
+                    <Button Content="Modifica" Click="btnModificareaJocului_Click" Height="45" Width="200" />
+                    <TextBlock x:Name="ErrBtnModifica" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                </StackPanel>
             </Grid>
         </Grid>
     </Grid>
