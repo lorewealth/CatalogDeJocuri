@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace WPF.Validatori
                 valid = false;
                 ErrHandler(ErrPret, Pret, "Introduceti un pret!");
             }
-            else if (!double.TryParse(Pret.Text, out var pretD) || pretD < 0)
+            else if (!double.TryParse(Pret.Text, CultureInfo.InvariantCulture, out var pretD) || pretD < 0)
             {
                 valid = false;
                 ErrHandler(ErrPret, Pret, "Introduceti un pret valid pozitiv sau 0!");
@@ -40,7 +41,7 @@ namespace WPF.Validatori
                 valid = false;
                 ErrHandler(ErrRate, Rate, "Introduceti o rata!");
             }
-            else if (!double.TryParse(Rate.Text, out double rateD) || rateD < Joc.RATE_MIN || rateD > Joc.RATE_MAX)
+            else if (!double.TryParse(Rate.Text, CultureInfo.InvariantCulture, out double rateD) || rateD < Joc.RATE_MIN || rateD > Joc.RATE_MAX)
             {
                 valid = false;
                 ErrHandler(ErrRate, Rate, $"Introduceti o rata intre {Joc.RATE_MIN}-{Joc.RATE_MAX}!");

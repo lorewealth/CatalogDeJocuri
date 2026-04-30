@@ -13,6 +13,7 @@ using CatalogDeJocuri;
 using DespreJoc;
 using DespreJoc.Enums;
 using WPF.Validatori;
+using System.Globalization;
 
 namespace WPF
 {
@@ -66,6 +67,7 @@ namespace WPF
             lstModificareJoacaComboBox.ItemsSource = Jocuri;
             lstModifJoacaVarstaListBox.ItemsSource = Enum.GetValues(typeof(RatingVarsta));
             lstModifJoacaPlatformeListBox.ItemsSource = Enum.GetValues(typeof(PlatformeDisponibile));
+            btnRezultatModif.Visibility = Visibility.Collapsed;
         }
 
         private void btnAdaugaJoc_Click(object sender, RoutedEventArgs e)
@@ -234,10 +236,42 @@ namespace WPF
             if (!JocInput.ValidareJocInput(lstModificareJoacaComboBox, ModifJoacaPretTextBox, ModifJoacaRateTextBox, ModifJoacaGenreTextBox, lstModifJoacaPlatformeListBox, ModifJoacaEditoriTextBox, ModifJoacaDezvoltatoriTextBox, lstModifJoacaVarstaListBox, ModifJoacaReleaseData,
                                ErrModifSelectJoaca, ErrModifPret, ErrModifRate, ErrModifGenre, ErrModifPlatforme, ErrModifEditori, ErrModifDezvoltatori, ErrModifRatingVarsta, ErrModifReleaseData))
             {
+                btnRezultatModif.Text = "Nu sa produs modificarea!";
+                btnRezultatModif.Foreground = Brushes.Crimson;
+                btnRezultatModif.Visibility = Visibility.Visible;
                 return; 
             }
 
-            //AdministrJocuri.UpdateJoc(new Joc());
+            string denumireaModif = lstModificareJoacaComboBox.Text;
+
+            double pretModif = Convert.ToDouble(ModifJoacaPretTextBox.Text, CultureInfo.InvariantCulture);
+            double rateModif = Convert.ToDouble(ModifJoacaRateTextBox.Text, CultureInfo.InvariantCulture);
+            
+            List<string> genreModif = ModifJoacaGenreTextBox.Text.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+            List<string> editoriModif = ModifJoacaEditoriTextBox.Text.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+            List<string> dezvoltatoriModif = ModifJoacaDezvoltatoriTextBox.Text.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+
+            PlatformeDisponibile platformeModif = 0;
+            foreach(var obj in lstModifJoacaPlatformeListBox.SelectedItems)
+            {
+                if (Enum.TryParse(typeof(PlatformeDisponibile), obj.ToString(), true, out object? pltfMod))
+                    platformeModif |= (PlatformeDisponibile)pltfMod;
+            }
+            RatingVarsta varstaModif = (RatingVarsta)lstModifJoacaVarstaListBox.SelectedItem;
+
+            DateTime ReleaseDataModif = ModifJoacaReleaseData.SelectedDate ?? DateTime.Today;
+            bool esteDisponibilModif = ModifJoacaEsteDispobinilCheckBox.IsChecked ?? true;
+
+            Joc jocCautat = Jocuri.Find(joc => joc.Denumirea.Equals(denumireaModif, StringComparison.OrdinalIgnoreCase));
+            Joc jocModif = new Joc(denumireaModif, pretModif, genreModif, platformeModif, editoriModif, dezvoltatoriModif, rateModif, varstaModif, ReleaseDataModif, esteDisponibilModif);
+
+            jocModif.setInternalId(jocCautat.InternalId);
+
+            AdministrJocuri.UpdateJoc(jocModif);
+
+            btnRezultatModif.Text = "Joaca a fost cu succes modificata!";
+            btnRezultatModif.Foreground = Brushes.Green;
+            btnRezultatModif.Visibility = Visibility.Visible;
 
         }
 
