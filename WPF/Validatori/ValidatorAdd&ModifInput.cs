@@ -21,14 +21,13 @@ namespace WPF.Validatori
             bool valid = true;
 
             DateTime ReleaseDataWPF = ReleaseData.SelectedDate ?? DateTime.MinValue;
-
             //pret
             if (string.IsNullOrWhiteSpace(Pret.Text))
             {
                 valid = false;
                 ErrHandler(ErrPret, Pret, "Introduceti un pret!");
             }
-            else if (!double.TryParse(Pret.Text, CultureInfo.InvariantCulture, out var pretD) || pretD < 0)
+            else if (!double.TryParse(Pret.Text.Replace(',', '.'), CultureInfo.InvariantCulture, out var pretD) || pretD < 0)
             {
                 valid = false;
                 ErrHandler(ErrPret, Pret, "Introduceti un pret valid pozitiv sau 0!");
@@ -41,7 +40,7 @@ namespace WPF.Validatori
                 valid = false;
                 ErrHandler(ErrRate, Rate, "Introduceti o rata!");
             }
-            else if (!double.TryParse(Rate.Text, CultureInfo.InvariantCulture, out double rateD) || rateD < Joc.RATE_MIN || rateD > Joc.RATE_MAX)
+            else if (!double.TryParse(Rate.Text.Replace(',', '.'), CultureInfo.InvariantCulture, out double rateD) || rateD < Joc.RATE_MIN || rateD > Joc.RATE_MAX)
             {
                 valid = false;
                 ErrHandler(ErrRate, Rate, $"Introduceti o rata intre {Joc.RATE_MIN}-{Joc.RATE_MAX}!");
@@ -74,20 +73,53 @@ namespace WPF.Validatori
             }
 
             //editori
-            if (string.IsNullOrWhiteSpace(Editori.Text))
+            if (!string.IsNullOrWhiteSpace(Editori.Text))
+            {
+                string[] editoriArr = Editori.Text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                HashSet<string> unic = new HashSet<string>();
+
+                if (editoriArr.Length == 0)
+                {
+                    valid = false;
+                    ErrHandler(ErrEditori, Editori, "Introduceti macar un editor valid!");
+                }
+                else if (editoriArr.Any(edi => !unic.Add(edi.ToLower())))
+                {
+                    valid = false;
+                    ErrHandler(ErrEditori, Editori, "Introduceti editor unic!");
+                }
+                else ResetErr(ErrEditori, Editori);
+
+            }
+            else
             {
                 valid = false;
-                ErrHandler(ErrEditori, Editori, "Introduceti macar un editor!");
+                ErrHandler(ErrEditori, Editori, "Introduceti minim un editor!");
             }
-            else ResetErr(ErrEditori, Editori);
 
             //dezvoltatori
-            if (string.IsNullOrWhiteSpace(Dezvoltatori.Text))
+            if (!string.IsNullOrWhiteSpace(Dezvoltatori.Text))
+            {
+                string[] dezvoltArr = Dezvoltatori.Text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                HashSet<string> unic = new HashSet<string>();
+
+                if (dezvoltArr.Length == 0)
+                {
+                    valid = false;
+                    ErrHandler(ErrDezvoltatori, Dezvoltatori, "Introduceti macar un dezvoltator valid!");
+                }
+                else if (dezvoltArr.Any(edi => !unic.Add(edi.ToLower())))
+                {
+                    valid = false;
+                    ErrHandler(ErrDezvoltatori, Dezvoltatori, "Introduceti dezvoltator unic!");
+                }
+                else ResetErr(ErrDezvoltatori, Dezvoltatori);
+            }
+            else
             {
                 valid = false;
-                ErrHandler(ErrDezvoltatori, Dezvoltatori, "Introduceti macar un dezvoltator!");
+                ErrHandler(ErrDezvoltatori, Dezvoltatori, "Introduceti minim un dezvoltator!");   
             }
-            else ResetErr(ErrDezvoltatori, Dezvoltatori);
 
             //releaseData
             if (ReleaseDataWPF == DateTime.MinValue)
