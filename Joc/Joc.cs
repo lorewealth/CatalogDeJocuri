@@ -1,6 +1,7 @@
 ﻿using System;
-using DespreJoc.Enums;
+using System.Globalization;
 using System.IO;
+using DespreJoc.Enums;
 
 namespace DespreJoc
 {
@@ -9,31 +10,73 @@ namespace DespreJoc
         //variabile
         public int InternalId { get; private set; }
         //public int ExternalId { get; private set; }
-        public string Denumirea { get; private set; }
-        public double Pret { get; private set; }
-        public double Rate { get; private set; }
-        public List<string> Genre { get; private set; }
-        public string GenreStr
-        { 
-            get { return string.Join(", ", Genre); }
-            private set;
+        public string Denumirea { get; set; }
+        public double Pret { get; set; }
+        public string PretStr
+        {
+            get => Pret.ToString(); 
+            set
+            {
+                double.TryParse(value.Replace(',', '.'), CultureInfo.InvariantCulture, out double pret);
+                Pret = pret;
+            }
         }
-        public PlatformeDisponibile Platforme { get; private set; }
-        public List<string> Editori { get; private set; }
+        public double Rate { get; set; }
+        public string RateStr
+        { 
+            get => Rate.ToString();
+            set
+            {
+                if (!double.TryParse(value.Replace(',', '.'), CultureInfo.InvariantCulture, out double rate)) Rate = 1;
+                else Rate = rate;
+            }
+        }
+        public List<string> Genre { get; set; }
+        public string GenreStr
+        {
+            get => string.Join(", ", Genre);
+            set
+            {
+                List<string> genreStr = [];
+                foreach(string gen in value.Split(", "))
+                {
+                    genreStr.Add(gen);
+                }
+                Genre = genreStr;
+            }
+        }
+        public PlatformeDisponibile Platforme { get; set; }
+        public List<string> Editori { get; set; }
         public string EditoriStr
         {
-            get { return string.Join(", ", Editori); }
-            private set;
+            get => string.Join(", ", Editori);
+            set
+            {
+                List<string> editoriStr = [];
+                foreach (string edi in value.Split(", "))
+                {
+                    editoriStr.Add(edi);
+                }
+                Editori = editoriStr;
+            }
         }
-        public List<string> Dezvoltatori { get; private set; }
+        public List<string> Dezvoltatori { get; set; }
         public string DezvoltatoriStr
         {
-            get { return string.Join(", ", Dezvoltatori); }
-            private set;
+            get => string.Join(", ", Dezvoltatori);
+            set
+            {
+                List<string> dezvStr = [];
+                foreach (string dezv in value.Split(", "))
+                {
+                    dezvStr.Add(dezv);
+                }
+                Dezvoltatori = dezvStr;
+            }
         }
-        public RatingVarsta Varsta { get; private set; }
-        public DateTime ReleaseData { get; private set; }
-        public bool EsteDisponibil { get; private set; }
+        public RatingVarsta Varsta { get; set; }
+        public DateTime ReleaseData { get; set; }
+        public bool EsteDisponibil { get; set; }
 
         //constante
         public const char SEPARATOR_PRINCIPAL_FISIER = ';';

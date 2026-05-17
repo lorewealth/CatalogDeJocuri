@@ -32,43 +32,76 @@ namespace StocareJocurilor
             return Jocuri;
         }
 
-        public List<Joc> GetJocuriCautare(string categoria, string criteriul)
+        public List<Joc> GetJocuriCautare(string categoria, string criteriu)
         {
-            List<Joc> JocuriCititeFisier = new List<Joc>();
-            List<Joc> JocuriGasiti = new List<Joc>();
+            List<Joc> Jocuri = new List<Joc>();
+            List<Joc> joculGasit = new List<Joc>();
 
             using(StreamReader fisier = new StreamReader(denFisier))
             {
                 string linieStr = string.Empty;
                 while((linieStr = fisier.ReadLine()) != null)
                 {
-                    JocuriCititeFisier.Add(new Joc(linieStr));
+                    Jocuri.Add(new Joc(linieStr));
                 }
             }
 
             switch (categoria)
             {
-                case "GENRE":
-                    JocuriGasiti = JocuriCititeFisier.Where(joc => joc.Genre.Any(subgen => subgen.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
-                    break;
-                case "DEZVOLTATORI":
-                    JocuriGasiti = JocuriCititeFisier.Where(joc => joc.Dezvoltatori.Any(subdez => subdez.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
-                    break;
-                case "EDITORI":
-                    JocuriGasiti = JocuriCititeFisier.Where(joc => joc.Editori.Any(subpub => subpub.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
-                    break;
-                case "PLATFORME":
-                    if (Enum.TryParse<PlatformeDisponibile>(criteriul, true, out PlatformeDisponibile res))
+                case "denumirea":
+                case "genre":
+                case "platforme":
+                case "dezvoltatori":
+                case "editori":
+                case "varsta":
+                    string[] strArrRest = criteriu.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                    foreach (string str in strArrRest)
                     {
-                        JocuriGasiti = JocuriCititeFisier.Where(joc => joc.Platforme.HasFlag(res)).ToList();
+                        if (categoria == "denumirea")       joculGasit = Jocuri.Where(joc => joc.Denumirea.Equals(str, StringComparison.OrdinalIgnoreCase)).ToList();
+                        if (categoria == "genre")           joculGasit = Jocuri.Where(joc => joc.Genre.Any(genrul => genrul.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
+                        if (categoria == "platforme" && Enum.TryParse<PlatformeDisponibile>(str, true, out PlatformeDisponibile res)) 
+                                                            joculGasit = Jocuri.Where(joc => joc.Platforme.HasFlag(res)).ToList();
+                        if (categoria == "editori")         joculGasit = Jocuri.Where(joc => joc.Editori.Any(editor => editor.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
+                        if (categoria == "dezvoltatori")    joculGasit = Jocuri.Where(joc => joc.Dezvoltatori.Any(dezvoltator => dezvoltator.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
+                        if (categoria == "varsta")          joculGasit = Jocuri.Where(joc => joc.Varsta.ToString().Equals(str, StringComparison.OrdinalIgnoreCase)).ToList();
                     }
+
                     break;
-                case "VARSTA":
-                    JocuriGasiti = JocuriCititeFisier.Where(joc => joc.Varsta.ToString().Equals(criteriul, StringComparison.OrdinalIgnoreCase)).ToList();
+                case "pret":
+                case "rate":
+                case "releasedata":
+                    string[] strArrPRA = criteriu.Split('-', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                    if (categoria == "releasedata")
+                    {
+                        //---temporar
+                        // Concatenez la primul si al doilea element(care sunt anii) luna, ziua si ora,
+                        // pentru a putea compara cu data selectata
+                        //---
+                        DateTime inceputT = Convert.ToDateTime($"{strArrPRA[0]}.01.01");
+                        DateTime sfarsitT = Convert.ToDateTime($"{strArrPRA[1]}.01.01");
+
+                        if (inceputT > sfarsitT)
+                            (inceputT, sfarsitT) = (sfarsitT, inceputT);
+
+                        joculGasit = Jocuri.Where(joc => joc.ReleaseData >= inceputT && joc.ReleaseData <= sfarsitT).ToList();
+                        break;
+                    }
+                    double inceput = Convert.ToDouble(strArrPRA[0]);
+                    double sfarsit = Convert.ToDouble(strArrPRA[1]);
+
+                    if (inceput > sfarsit)
+                        (inceput, sfarsit) = (sfarsit, inceput);
+
+                    if (categoria == "pret") joculGasit = Jocuri.Where(joc => joc.Pret >= inceput && joc.Pret <= sfarsit).ToList();
+                    if (categoria == "rate") joculGasit = Jocuri.Where(joc => joc.Rate >= inceput && joc.Rate <= sfarsit).ToList();
+
                     break;
-                default: break;
+                default:
+                    break;
             }
-            return JocuriGasiti;
+            return joculGasit;
 
         }
 
