@@ -269,34 +269,17 @@ namespace WPF
         }
         private void InputModificare(bool aprins)
         {
-            if(aprins)
-            {
-                btnModificaXAML.IsEnabled                  = true;
-                ModifJoacaPretTextBox.IsEnabled            = true;
-                ModifJoacaDenumireaTextBox.IsEnabled       = true;
-                ModifJoacaDezvoltatoriTextBox.IsEnabled    = true;
-                ModifJoacaEditoriTextBox.IsEnabled         = true;
-                ModifJoacaGenreTextBox.IsEnabled           = true;
-                ModifJoacaRateTextBox.IsEnabled            = true;
-                ModifJoacaReleaseData.IsEnabled            = true;
-                lstModifJoacaVarstaListBox.IsEnabled       = true;
-                lstModifJoacaPlatformeListBox.IsEnabled    = true;
-                ModifJoacaEsteDispobinilCheckBox.IsEnabled = true;
-            }
-            else
-            {
-                btnModificaXAML.IsEnabled                  = false;
-                ModifJoacaPretTextBox.IsEnabled            = false;
-                ModifJoacaDenumireaTextBox.IsEnabled       = false;
-                ModifJoacaDezvoltatoriTextBox.IsEnabled    = false;
-                ModifJoacaEditoriTextBox.IsEnabled         = false;
-                ModifJoacaGenreTextBox.IsEnabled           = false;
-                ModifJoacaRateTextBox.IsEnabled            = false;
-                ModifJoacaReleaseData.IsEnabled            = false;
-                lstModifJoacaVarstaListBox.IsEnabled       = false;
-                lstModifJoacaPlatformeListBox.IsEnabled    = false;
-                ModifJoacaEsteDispobinilCheckBox.IsEnabled = false;
-            }
+            btnModificaXAML.IsEnabled                  = aprins;
+            ModifJoacaPretTextBox.IsEnabled            = aprins;
+            ModifJoacaDenumireaTextBox.IsEnabled       = aprins;
+            ModifJoacaDezvoltatoriTextBox.IsEnabled    = aprins;
+            ModifJoacaEditoriTextBox.IsEnabled         = aprins;
+            ModifJoacaGenreTextBox.IsEnabled           = aprins;
+            ModifJoacaRateTextBox.IsEnabled            = aprins;
+            ModifJoacaReleaseData.IsEnabled            = aprins;
+            lstModifJoacaVarstaListBox.IsEnabled       = aprins;
+            lstModifJoacaPlatformeListBox.IsEnabled    = aprins;
+            ModifJoacaEsteDispobinilCheckBox.IsEnabled = aprins;
         }
 
         //metoda de a prelua de la radiobuton continut
