@@ -46,32 +46,30 @@ namespace DespreJoc
             }
         }
         public PlatformeDisponibile Platforme { get; set; }
-        public List<string> Editori { get; set; }
+        public List<Editor> Editori { get; set; } = [];
         public string EditoriStr
         {
-            get => string.Join(", ", Editori);
+            get => string.Join(", ", Editori.Select(ed => ed.Denumirea));
             set
             {
-                List<string> editoriStr = [];
+                List<Editor> editori = [];
                 foreach (string edi in value.Split(", "))
-                {
-                    editoriStr.Add(edi);
-                }
-                Editori = editoriStr;
+                    editori.Add(new Editor(edi));
+
+                Editori = editori;
             }
         }
-        public List<string> Dezvoltatori { get; set; }
+        public List<Dezvoltator> Dezvoltatori { get; set; } = [];
         public string DezvoltatoriStr
         {
-            get => string.Join(", ", Dezvoltatori);
+            get => string.Join(", ", Dezvoltatori.Select(dv => dv.Denumirea));
             set
             {
-                List<string> dezvStr = [];
+                List<Dezvoltator> dezvol = [];
                 foreach (string dezv in value.Split(", "))
-                {
-                    dezvStr.Add(dezv);
-                }
-                Dezvoltatori = dezvStr;
+                    dezvol.Add(new Dezvoltator(dezv));
+
+                Dezvoltatori = dezvol;
             }
         }
         public RatingVarsta Varsta { get; set; }
@@ -102,7 +100,7 @@ namespace DespreJoc
         public void setInternalId(int id) { InternalId = id; }
 
         //constructor
-        public Joc(string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<string> Editori, List<string> Dezvoltatori, double Rate, RatingVarsta RatingVarsta, DateTime ReleaseData, bool EsteDisponibil)
+        public Joc(string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<Editor> Editori, List<Dezvoltator> Dezvoltatori, double Rate, RatingVarsta RatingVarsta, DateTime ReleaseData, bool EsteDisponibil)
         {
             this.Denumirea = Denumirea;
             this.Pret = Pret;
@@ -125,13 +123,16 @@ namespace DespreJoc
             this.Pret = Convert.ToDouble(date[PRETUL]);
             this.Rate = Convert.ToDouble(date[RATING]);
             this.Genre = date[GENRE].Split(SEPARATOR_SECUNDAR_FISIER).ToList();
-            this.Dezvoltatori = date[DEZVOLTATORI].Split(SEPARATOR_SECUNDAR_FISIER).ToList();
-            this.Editori = date[EDITORI].Split(SEPARATOR_SECUNDAR_FISIER).ToList();
+
+            foreach(string dezv in date[DEZVOLTATORI].Split(SEPARATOR_SECUNDAR_FISIER))
+                this.Dezvoltatori.Add(new Dezvoltator(dezv));
+
+            foreach(string edit in date[EDITORI].Split(SEPARATOR_SECUNDAR_FISIER))
+                this.Editori.Add(new Editor(edit));
 
             foreach (string platforma in date[PLATFORME].Split(SEPARATOR_SECUNDAR_FISIER))
-            {
                 if (Enum.TryParse(platforma, true, out PlatformeDisponibile Platforma)) { this.Platforme |= Platforma; }
-            }
+
             if (Enum.TryParse(date[VARSTA], true, out RatingVarsta Varsta)) { this.Varsta = Varsta; }
 
             this.ReleaseData = Convert.ToDateTime(date[RELEASE_DATA]);
@@ -141,9 +142,9 @@ namespace DespreJoc
         public string FormatareJoculuiInStr()
         {
             string sGenre = string.Join(SEPARATOR_SECUNDAR_FISIER, Genre); 
-            string sDezvoltatori = string.Join(SEPARATOR_SECUNDAR_FISIER, Dezvoltatori); 
-            string sEditori = string.Join(SEPARATOR_SECUNDAR_FISIER, Editori);
-            List<string> platformeFormatate = Platforme.ToString().Split(", ").ToList();            
+            string sDezvoltatori = string.Join(SEPARATOR_SECUNDAR_FISIER, Dezvoltatori.Select(dezv => dezv.Denumirea)); 
+            string sEditori = string.Join(SEPARATOR_SECUNDAR_FISIER, Editori.Select(edit => edit.Denumirea));
+            List<string> platformeFormatate = Platforme.ToString().Split(", ").ToList();
 
             string sPlatforme = string.Join(SEPARATOR_SECUNDAR_FISIER, platformeFormatate); 
             
@@ -167,8 +168,8 @@ namespace DespreJoc
             string info = $"Detalii jocului: {Denumirea}\nPretul: {Pret}\nRating: {Rate}/10";
             info += "\nGenre:\n\t" + string.Join("\n\t", Genre);
             info += "\nPlatforme:\n\t" + Platforme.ToString().Replace(", ", "\n\t");
-            info += "\nDezvoltatori:\n\t" + string.Join("\n\t", Dezvoltatori);
-            info += "\nEditori:\n\t" + string.Join("\n\t", Editori);
+            info += "\nDezvoltatori:\n\t" + string.Join("\n\t", Dezvoltatori.Select(dezv => dezv.Denumirea));
+            info += "\nEditori:\n\t" + string.Join("\n\t", Editori.Select(edit => edit.Denumirea));
             info += "\nRating de Varsta:\n\t" + Varsta.ToString();
             info += "\nReleaseDate:\n\t" + ReleaseData;
             info += "\nEsteDisponibil:\n\t" + EsteDisponibil;

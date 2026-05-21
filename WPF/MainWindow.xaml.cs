@@ -9,6 +9,7 @@ using WPF.Validatori;
 using System.Globalization;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
 
 namespace WPF
 {
@@ -19,6 +20,8 @@ namespace WPF
     {
         IStocare AdministrJocuri = Decident.PrelucrareaDatelor();
         List<Joc> Jocuri;
+        ObservableCollection<Editor> EditorileLST = [];
+        ObservableCollection<Dezvoltator> DezvoltatoriLST = []; 
         private Joc _JocCurent;
         public Joc JocCurent
         {
@@ -41,6 +44,7 @@ namespace WPF
             DataContext = this;
             InitializeComponent();
             AfisareJocuri();
+            DezvEditListBoxInitializare();
         }
 
         private void AfisareJocuri()
@@ -48,6 +52,7 @@ namespace WPF
             Jocuri = AdministrJocuri.GetJocuri();
             dgJocuri.ItemsSource = Jocuri;
         }
+
         private void dgJocuriSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(ModificareMeniuPanel.Visibility == Visibility.Visible)
@@ -55,12 +60,44 @@ namespace WPF
                 JocCurent = dgJocuri.SelectedItem as Joc;
                 if (JocCurent == null) return;
 
-                foreach(PlatformeDisponibile pltf in Enum.GetValues(typeof(PlatformeDisponibile)))
+                //pun selectat elementele de la platforme, dezvoltatori si editori a jocului deja existent
+                foreach (PlatformeDisponibile pltf in Enum.GetValues(typeof(PlatformeDisponibile)))
                     if (JocCurent.Platforme.HasFlag(pltf))
-                        lstModifJoacaPlatformeListBox.SelectedItems.Add(pltf);
+                        ModifJoacaPlatformeListBox.SelectedItems.Add(pltf);
+
+                foreach(Editor ed in JocCurent.Editori)
+                {
+                    Editor edi = EditorileLST.FirstOrDefault(edlst => edlst.Denumirea.Equals(ed.Denumirea, StringComparison.OrdinalIgnoreCase));
+                    if (edi != null) ModifJoacaEditoriListBox.SelectedItems.Add(edi);
+                }
+
+                foreach(Dezvoltator dz in JocCurent.Dezvoltatori)
+                {
+                    Dezvoltator dzv = DezvoltatoriLST.FirstOrDefault(dzlst => dzlst.Denumirea.Equals(dz.Denumirea, StringComparison.OrdinalIgnoreCase));
+                    if (dzv != null) ModifJoacaDezvoltatoriListBox.SelectedItems.Add(dzv);
+                }
 
                 InputModificare(true);
             }
+        }
+
+        private void DezvEditListBoxInitializare()
+        {
+            EditorileLST.Clear();
+            DezvoltatoriLST.Clear();
+
+            if (Jocuri.Count > 0)
+            {
+                var editoriUnici = Jocuri.SelectMany(joc => joc.EditoriStr.Split(", ")).Distinct();
+                var dezvUnici    = Jocuri.SelectMany(joc => joc.DezvoltatoriStr.Split(", ")).Distinct();
+
+                foreach (var editori in editoriUnici)
+                    EditorileLST.Add(new Editor(editori));
+                foreach (var dezv in dezvUnici)
+                    DezvoltatoriLST.Add(new Dezvoltator(dezv));
+            }
+            AdaugaDezvoltatoriListBox.ItemsSource = DezvoltatoriLST;
+            AdaugaEditoriListBox.ItemsSource = EditorileLST;
         }
 
         //click metode pentru butoane
@@ -73,6 +110,7 @@ namespace WPF
             Rezultat.Visibility = Visibility.Collapsed;
             AfisareJocuri();
             StergeInputAdaugare();
+            InputModificare(false);
         }
         
         private void btnMeniuCautareJocuri_Click(object sender, RoutedEventArgs e)
@@ -81,6 +119,7 @@ namespace WPF
             dgJocuri.Visibility= Visibility.Collapsed;
             ModificareMeniuPanel.Visibility = Visibility.Collapsed;
             CautareJoculPanel.Visibility = Visibility.Visible;
+            InputModificare(false);
         }
 
         private void btnMeniuModificareJoc_Click(object sender, RoutedEventArgs e)
@@ -91,8 +130,10 @@ namespace WPF
             CautareJoculPanel.Visibility = Visibility.Collapsed;
             ModificareMeniuPanel.Visibility = Visibility.Visible;
 
-            lstModifJoacaVarstaListBox.ItemsSource = Enum.GetValues(typeof(RatingVarsta));
-            lstModifJoacaPlatformeListBox.ItemsSource = Enum.GetValues(typeof(PlatformeDisponibile));
+            ModifJoacaVarstaListBox.ItemsSource = Enum.GetValues(typeof(RatingVarsta));
+            ModifJoacaPlatformeListBox.ItemsSource = Enum.GetValues(typeof(PlatformeDisponibile));
+            ModifJoacaDezvoltatoriListBox.ItemsSource = DezvoltatoriLST;
+            ModifJoacaEditoriListBox.ItemsSource = EditorileLST;
             btnRezultatModif.Visibility = Visibility.Collapsed;
 
             AfisareJocuri();
@@ -102,7 +143,7 @@ namespace WPF
         private void btnAdaugaJoc_Click(object sender, RoutedEventArgs e)
         {
             //valideaza input a userului
-            if (!JocInput.ValidareJocInput(Denumirea, Pret, Rate, Genre, SelectatorPlatforme, Editori, Dezvoltatori, SelectatorVarsta, ReleaseData,
+            if (!JocInput.ValidareJocInput(Denumirea, Pret, Rate, Genre, SelectatorPlatforme, AdaugaEditoriListBox, AdaugaDezvoltatoriListBox, SelectatorVarsta, ReleaseData,
                                            ErrDenumirea, ErrPret, ErrRate, ErrGenre, ErrPlatforme, ErrEditori, ErrDezvoltatori, ErrVarsta, ErrReleaseData))
             {
                 return;
@@ -117,16 +158,16 @@ namespace WPF
             PlatformeDisponibile Platformele = 0;
             foreach (var elem in SelectatorPlatforme.Items)
             {
-                if (elem is CheckBox checboxul && 
-                    checboxul.IsChecked == true && 
-                    Enum.TryParse(typeof(PlatformeDisponibile), checboxul.Content.ToString(), out object pltf))
+                if (elem is CheckBox checboxul && checboxul.IsChecked == true) 
                 {
+                    string platformeText = checboxul.Tag.ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(platformeText) && Enum.TryParse(typeof(PlatformeDisponibile), platformeText, out object pltf))
                         Platformele |= (PlatformeDisponibile)pltf;
                 }
             }
 
-            List<string> EditoriForm = Editori.Text.Split(",").Select(editor => editor.Trim()).ToList();
-            List<string> DezvoltatoriForm = Dezvoltatori.Text.Split(",").Select(dezvoltator => dezvoltator.Trim()).ToList();
+            List<Editor> EditoriForm = AdaugaEditoriListBox.SelectedItems.Cast<Editor>().ToList();
+            List<Dezvoltator> DezvoltatoriForm = AdaugaDezvoltatoriListBox.SelectedItems.Cast<Dezvoltator>().ToList();
 
             double.TryParse(Rate.Text, out double RataForm);
 
@@ -165,10 +206,10 @@ namespace WPF
             }
             Jocuri = AdministrJocuri.GetJocuri();
 
-            Rezultat.Visibility     = Visibility.Visible;
-            Rezultat.Text           = "Joaca a fost sters cu succes!";
-            Rezultat.Foreground     = Brushes.White;
-            Rezultat.Background     = Brushes.DarkGreen;
+            Rezultat.Visibility = Visibility.Visible;
+            Rezultat.Text = "Joaca a fost sters cu succes!";
+            Rezultat.Foreground = Brushes.White;
+            Rezultat.Background = Brushes.DarkGreen;
 
             AfisareJocuri();
         }
@@ -204,27 +245,36 @@ namespace WPF
 
         private void btnModificareaJocului_Click(object sender, RoutedEventArgs e)
         {
-            if (!JocInput.ValidareJocInput(ModifJoacaDenumireaTextBox, ModifJoacaPretTextBox, ModifJoacaRateTextBox, ModifJoacaGenreTextBox, lstModifJoacaPlatformeListBox, ModifJoacaEditoriTextBox, ModifJoacaDezvoltatoriTextBox, lstModifJoacaVarstaListBox, ModifJoacaReleaseData,
+            if (!JocInput.ValidareJocInput(ModifJoacaDenumireaTextBox, ModifJoacaPretTextBox, ModifJoacaRateTextBox, ModifJoacaGenreTextBox, ModifJoacaPlatformeListBox, ModifJoacaEditoriListBox, ModifJoacaDezvoltatoriListBox, ModifJoacaVarstaListBox, ModifJoacaReleaseDataListBox,
                                ErrModifDenumirea, ErrModifPret, ErrModifRate, ErrModifGenre, ErrModifPlatforme, ErrModifEditori, ErrModifDezvoltatori, ErrModifRatingVarsta, ErrModifReleaseData))
             {
                 btnRezultatModif.Text = "Nu sa produs modificarea!";
                 btnRezultatModif.Foreground = Brushes.Crimson;
                 btnRezultatModif.Visibility = Visibility.Visible;
-                return; 
+                return;
             }
 
             JocCurent.Genre = ModifJoacaGenreTextBox.Text.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
-            JocCurent.Dezvoltatori = ModifJoacaDezvoltatoriTextBox.Text.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
-            JocCurent.Editori = ModifJoacaEditoriTextBox.Text.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
 
             PlatformeDisponibile platformeModif = 0;
-            foreach (var obj in lstModifJoacaPlatformeListBox.SelectedItems)
+            foreach (var obj in ModifJoacaPlatformeListBox.SelectedItems)
             {
                 if (Enum.TryParse(typeof(PlatformeDisponibile), obj.ToString(), true, out object? pltfMod))
                     platformeModif |= (PlatformeDisponibile)pltfMod;
             }
 
+            List<Editor> editori = []; 
+            foreach(Editor obj in ModifJoacaEditoriListBox.SelectedItems)
+                editori.Add(obj);
+
+            List<Dezvoltator> dezvolatori = [];
+            foreach(Dezvoltator obj in ModifJoacaDezvoltatoriListBox.SelectedItems)
+                dezvolatori.Add(obj);
+
             JocCurent.Platforme = platformeModif;
+            JocCurent.Dezvoltatori = dezvolatori;
+            JocCurent.Editori = editori;
+
             AdministrJocuri.UpdateJoc(JocCurent);
 
             btnRezultatModif.Text = "Joaca a fost cu succes modificata!";
@@ -234,6 +284,20 @@ namespace WPF
             StergeInputModificare();
             AfisareJocuri();
             InputModificare(false);
+        }
+
+        private void btnAdaugaEditorListBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (!AddDezvEditListBoxVal.Validare(AdaugaEditoriTextBox, ErrEditori, EditorileLST, edit => edit.Denumirea, "editori")) return;
+            EditorileLST.Add(new Editor(AdaugaEditoriTextBox.Text));
+            AdaugaEditoriTextBox.Text = "";
+        }
+
+        private void btnAdaugaDezvoltListBox_Click(object sender, RoutedEventArgs e)
+        {
+            if (!AddDezvEditListBoxVal.Validare(AdaugaDezvoltatoriTextBox, ErrDezvoltatori, DezvoltatoriLST, dez => dez.Denumirea, "dezvoltator")) return;
+            DezvoltatoriLST.Add(new Dezvoltator(AdaugaDezvoltatoriTextBox.Text));
+            AdaugaDezvoltatoriTextBox.Text = "";
         }
 
         //metoda de a sterge input-uri vechi
@@ -248,8 +312,10 @@ namespace WPF
             {
                 if (elem is CheckBox ch) ch.IsChecked = false;
             }
-            Editori.Text = "";
-            Dezvoltatori.Text = "";
+            AdaugaEditoriTextBox.Text = "";
+            AdaugaDezvoltatoriListBox.SelectedItems.Clear();
+            AdaugaEditoriListBox.SelectedItems.Clear();
+            AdaugaDezvoltatoriTextBox.Text = "";
             SelectatorVarsta.SelectedIndex = 0;
             ReleaseData.SelectedDate = null;
             eDisponibilCheckBox.IsChecked = false;
@@ -258,27 +324,28 @@ namespace WPF
         {
             ModifJoacaPretTextBox.Text                 = "";
             ModifJoacaDenumireaTextBox.Text            = "";
-            ModifJoacaDezvoltatoriTextBox.Text         = "";
-            ModifJoacaEditoriTextBox.Text              = "";
             ModifJoacaGenreTextBox.Text                = "";
             ModifJoacaRateTextBox.Text                 = "";
-            ModifJoacaReleaseData.SelectedDate         = null;
-            lstModifJoacaVarstaListBox.SelectedItem    = null;
+            ModifJoacaReleaseDataListBox.SelectedDate  = null;
+            ModifJoacaVarstaListBox.SelectedItem       = null;
             ModifJoacaEsteDispobinilCheckBox.IsChecked = false;
-            lstModifJoacaPlatformeListBox.SelectedItems.Clear();
+            ModifJoacaPlatformeListBox.SelectedItems.Clear();
+            ModifJoacaDezvoltatoriListBox.SelectedItems.Clear();
+            ModifJoacaEditoriListBox.SelectedItems.Clear();
+
         }
         private void InputModificare(bool aprins)
         {
             btnModificaXAML.IsEnabled                  = aprins;
             ModifJoacaPretTextBox.IsEnabled            = aprins;
             ModifJoacaDenumireaTextBox.IsEnabled       = aprins;
-            ModifJoacaDezvoltatoriTextBox.IsEnabled    = aprins;
-            ModifJoacaEditoriTextBox.IsEnabled         = aprins;
+            ModifJoacaDezvoltatoriListBox.IsEnabled = aprins;
+            ModifJoacaEditoriListBox.IsEnabled      = aprins;
             ModifJoacaGenreTextBox.IsEnabled           = aprins;
             ModifJoacaRateTextBox.IsEnabled            = aprins;
-            ModifJoacaReleaseData.IsEnabled            = aprins;
-            lstModifJoacaVarstaListBox.IsEnabled       = aprins;
-            lstModifJoacaPlatformeListBox.IsEnabled    = aprins;
+            ModifJoacaReleaseDataListBox.IsEnabled            = aprins;
+            ModifJoacaVarstaListBox.IsEnabled       = aprins;
+            ModifJoacaPlatformeListBox.IsEnabled    = aprins;
             ModifJoacaEsteDispobinilCheckBox.IsEnabled = aprins;
         }
 
