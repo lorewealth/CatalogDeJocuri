@@ -31,7 +31,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!-- Adaugare -->
-            <StackPanel x:Name="AdministJocPanel" Visibility="Collapsed" Grid.Row="0">
+            <StackPanel x:Name="AdministJocPanel" Visibility="Visible" Grid.Row="0">
                 <Label Content="Introducerea Jocului" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -247,7 +247,7 @@
                 </DataGrid>
             </Grid>
             <!-- Modificare panel-->
-            <Grid x:Name="ModificareMeniuPanel" Visibility="Visible">
+            <Grid x:Name="ModificareMeniuPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
