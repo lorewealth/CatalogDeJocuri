@@ -75,10 +75,10 @@ namespace StocareJocurilor
                     JocuriGasiti = Jocuri.Where(joc => joc.Genre.Any(subgen => subgen.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
                     break;
                 case "DEZVOLTATORI":
-                    JocuriGasiti = Jocuri.Where(joc => joc.Dezvoltatori.Any(subdez => subdez.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
+                    JocuriGasiti = Jocuri.Where(joc => joc.Dezvoltatori.Any(subdez => subdez.Denumirea.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
                     break;
                 case "EDITORI":
-                    JocuriGasiti = Jocuri.Where(joc => joc.Editori.Any(subpub => subpub.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
+                    JocuriGasiti = Jocuri.Where(joc => joc.Editori.Any(subpub => subpub.Denumirea.Equals(criteriul, StringComparison.OrdinalIgnoreCase))).ToList();
                     break;
                 case "PLATFORME":
                     if (Enum.TryParse<PlatformeDisponibile>(criteriul, true, out PlatformeDisponibile res))

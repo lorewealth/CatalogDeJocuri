@@ -31,7 +31,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!-- Adaugare -->
-            <StackPanel x:Name="AdministJocPanel" Visibility="Visible" Grid.Row="0">
+            <StackPanel x:Name="AdministJocPanel" Visibility="Collapsed" Grid.Row="0">
                 <Label Content="Introducerea Jocului" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -70,10 +70,10 @@
                         <ComboBox x:Name="SelectatorPlatforme" Height="25" SelectedIndex="0" HorizontalContentAlignment="Stretch">
                             <ComboBox.Items>
                                 <ComboBoxItem Content="-- Selecteaza --"/>
-                                <CheckBox Content="Steam"/>
-                                <CheckBox Content="EpicGames"/>
-                                <CheckBox Content="GOG"/>
-                                <CheckBox Content="itchIo"/>
+                                <CheckBox Content="Steam" Tag="Steam"/>
+                                <CheckBox Content="Epic Games Store" Tag="EpicGames"/>
+                                <CheckBox Content="GOG" Tag="GOG"/>
+                                <CheckBox Content="itch.io" Tag="itchIo"/>
                             </ComboBox.Items>
                         </ComboBox>
                         <TextBlock x:Name="ErrPlatforme" Text="Platforme Invalide" Foreground="Crimson" Visibility="Collapsed"/>
@@ -84,15 +84,11 @@
                         <TextBlock x:Name="ErrRate" Text="Rate Invalid" Foreground="Crimson" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1">
-                        <Label Content="Editori" Padding="0" HorizontalAlignment="Center"/>
-                        <TextBox x:Name="Editori" Height="25" Width="Auto"/>
-                        <TextBlock x:Name="ErrEditori" Text="Editori Invalide" Foreground="Crimson" Visibility="Collapsed"/>
+                        <Label Content="Anul" Padding="0" HorizontalAlignment="Center" Target="{Binding ElementName=ReleaseData}"/>
+                        <DatePicker Name="ReleaseData" DisplayDateStart="1958-01-01" DisplayDateEnd="2050-01-01"/>
+                        <TextBlock x:Name="ErrReleaseData" Text="Anul Invalid" Foreground="Crimson" Visibility="Collapsed" HorizontalAlignment="Center" Width="Auto"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="2">
-                        <Label Content="Dezvoltatori" Padding="0" HorizontalAlignment="Center"/>
-                        <TextBox x:Name="Dezvoltatori" Height="25" Width="Auto"/>
-                        <TextBlock x:Name="ErrDezvoltatori" Text="Dezvoltatori Invalide" Foreground="Crimson" Visibility="Collapsed"/>
-                    </StackPanel>
+                    <CheckBox x:Name="eDisponibilCheckBox" Content="Este disponibil" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <StackPanel Grid.Row="1" Grid.Column="3">
                         <Label Content="Varsta(PEGI3-PEGI18)" Padding="0" HorizontalAlignment="Center"/>
                         <ComboBox x:Name="SelectatorVarsta" SelectedIndex="0" Height="25">
@@ -107,14 +103,44 @@
                     </StackPanel>
                 </Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel.Resources>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Margin" Value="5,0,0,0"/>
+                        </Style>
+                    </StackPanel.Resources>
                     <StackPanel>
-                        <Label Content="Anul" Padding="0" HorizontalAlignment="Center" Target="{Binding ElementName=ReleaseData}"/>
-                        <DatePicker Name="ReleaseData" Margin="5" DisplayDateStart="1958-01-01" DisplayDateEnd="2050-01-01"/>
-                        <TextBlock x:Name="ErrReleaseData" Text="Anul Invalid" Foreground="Crimson" Visibility="Collapsed" HorizontalAlignment="Center" Width="Auto"/>
+                        <Label Content="Selectati editori" Padding="0" HorizontalAlignment="Center"/>
+                        <ListBox 
+                            x:Name="AdaugaEditoriListBox"
+                            Width="200" Height="150"
+                            DisplayMemberPath="Denumirea"
+                            SelectionMode="Multiple"/>
+                        <StackPanel>
+                            <Label Content="Denumirea editorului:" Padding="0" HorizontalAlignment="Left" Margin="10,5,0,-5"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox x:Name="AdaugaEditoriTextBox" Height="25" Width="150" Margin="5,0,5,0" />
+                                <Button Content="Adauga editor" Click="btnAdaugaEditorListBox_Click" Width="95" Margin="5,0,5,0" Height="35"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock x:Name="ErrEditori" Text="Editori Invalide" Foreground="Crimson" Visibility="Collapsed"/>
                     </StackPanel>
-                    <CheckBox x:Name="eDisponibilCheckBox" Content="Este disponibil" Margin="25"/>
+                    <StackPanel>
+                        <Label Content="Selectati dezvoltatori" Padding="0" HorizontalAlignment="Center"/>
+                        <ListBox 
+                            x:Name="AdaugaDezvoltatoriListBox"
+                            Width="200" Height="150"
+                            DisplayMemberPath="Denumirea"
+                            SelectionMode="Multiple"/>
+                        <StackPanel>
+                            <Label Content="Denumirea dezvoltatorului:" Padding="0" HorizontalAlignment="Left" Margin="10,5,0,-5"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox x:Name="AdaugaDezvoltatoriTextBox" Height="25" Width="150" Margin="5,0,5,5" />
+                                <Button Content="Adauga dezvoltatori" Click="btnAdaugaDezvoltListBox_Click" Width="125" Margin="5,0,5,5" Height="35"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock x:Name="ErrDezvoltatori" Text="Dezvoltatori Invalide" Foreground="Crimson" Visibility="Collapsed"/>
+                    </StackPanel>
                 </StackPanel>
-
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
                     <StackPanel.Resources>
                         <Style TargetType="Button">
@@ -125,7 +151,7 @@
                     <Button Content="Adauga Joc" Click="btnAdaugaJoc_Click" Width="90" Height="30"/>
                     <Button Content="Sterge Ultimul Joc" Click="btnStergeUltJoc_Click" Width="120" Height="30"/>
                 </StackPanel>
-                <TextBlock x:Name="Rezultat" Text="" Padding="5" Width="Auto" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                <TextBlock x:Name="Rezultat" Text="" Padding="5" Width="Auto" HorizontalAlignment="Center" Margin="0,0,0,5" Visibility="Collapsed"/>
             </StackPanel>
             <DataGrid 
                 x:Name="dgJocuri"
@@ -221,7 +247,7 @@
                 </DataGrid>
             </Grid>
             <!-- Modificare panel-->
-            <Grid x:Name="ModificareMeniuPanel" Visibility="Collapsed">
+            <Grid x:Name="ModificareMeniuPanel" Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -281,50 +307,53 @@
                         <TextBlock x:Name="ErrModifGenre" Text="" Foreground="Crimson" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0">
-                        <TextBlock Text="Release data: "/>
-                        <DatePicker 
-                            x:Name="ModifJoacaReleaseData" 
-                            Width="200" Height="35"
-                            IsEnabled="False"
-                            SelectedDate="{Binding JocCurent.ReleaseData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBlock x:Name="ErrModifReleaseData" Text="" Foreground="Crimson" Visibility="Collapsed"/>
-                    </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1">
                         <TextBlock Text="Editori: "/>
-                        <TextBox 
-                            x:Name="ModifJoacaEditoriTextBox" 
-                            Width="200" Height="35"
+                        <ListBox 
+                            x:Name="ModifJoacaEditoriListBox" 
+                            Width="200" Height="100"
                             IsEnabled="False"
-                            Text="{Binding JocCurent.EditoriStr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            DisplayMemberPath="Denumirea"
+                            SelectionMode="Multiple"/>
                         <TextBlock x:Name="ErrModifEditori" Text="" Foreground="Crimson" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="2">
+                    <StackPanel Grid.Row="1" Grid.Column="1">
                         <TextBlock Text="Dezvoltatori: "/>
-                        <TextBox 
-                            x:Name="ModifJoacaDezvoltatoriTextBox"
-                            Width="200" Height="35"
+                        <ListBox 
+                            x:Name="ModifJoacaDezvoltatoriListBox" 
+                            Width="200" Height="100"
                             IsEnabled="False"
-                            Text="{Binding JocCurent.DezvoltatoriStr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            DisplayMemberPath="Denumirea"
+                            SelectionMode="Multiple"/>
+
                         <TextBlock x:Name="ErrModifDezvoltatori" Text="" Foreground="Crimson" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0">
+                    <StackPanel Grid.Row="1" Grid.Column="2">
                         <TextBlock Text="Rating Varsta: "/>
                         <ListBox 
-                            x:Name="lstModifJoacaVarstaListBox" 
+                            x:Name="ModifJoacaVarstaListBox" 
                             Width="200" Height="100"
                             IsEnabled="False"
                             SelectedValue="{Binding JocCurent.Varsta, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             />
                         <TextBlock x:Name="ErrModifRatingVarsta" Text="" Foreground="Crimson" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1">
+                    <StackPanel Grid.Row="2" Grid.Column="0">
                         <TextBlock Text="Platforme: "/>
                         <ListBox 
-                            x:Name="lstModifJoacaPlatformeListBox" 
+                            x:Name="ModifJoacaPlatformeListBox" 
                             Width="200" Height="100"
                             IsEnabled="False"
                             SelectionMode="Multiple"/>
                         <TextBlock x:Name="ErrModifPlatforme" Text="" Foreground="Crimson" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1">
+                        <TextBlock Text="Release data: "/>
+                        <DatePicker 
+                            x:Name="ModifJoacaReleaseDataListBox" 
+                            Width="200" Height="35"
+                            IsEnabled="False"
+                            SelectedDate="{Binding JocCurent.ReleaseData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock x:Name="ErrModifReleaseData" Text="" Foreground="Crimson" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
                         <TextBlock Text="Este Disponibil: " Margin="0,0,5,0"/>

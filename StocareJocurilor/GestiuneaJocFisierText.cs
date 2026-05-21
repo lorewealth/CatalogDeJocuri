@@ -62,8 +62,8 @@ namespace StocareJocurilor
                         if (categoria == "genre")           joculGasit = Jocuri.Where(joc => joc.Genre.Any(genrul => genrul.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
                         if (categoria == "platforme" && Enum.TryParse<PlatformeDisponibile>(str, true, out PlatformeDisponibile res)) 
                                                             joculGasit = Jocuri.Where(joc => joc.Platforme.HasFlag(res)).ToList();
-                        if (categoria == "editori")         joculGasit = Jocuri.Where(joc => joc.Editori.Any(editor => editor.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
-                        if (categoria == "dezvoltatori")    joculGasit = Jocuri.Where(joc => joc.Dezvoltatori.Any(dezvoltator => dezvoltator.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
+                        if (categoria == "editori")         joculGasit = Jocuri.Where(joc => joc.Editori.Any(editor => editor.Denumirea.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
+                        if (categoria == "dezvoltatori")    joculGasit = Jocuri.Where(joc => joc.Dezvoltatori.Any(dezvoltator => dezvoltator.Denumirea.Equals(str, StringComparison.OrdinalIgnoreCase))).ToList();
                         if (categoria == "varsta")          joculGasit = Jocuri.Where(joc => joc.Varsta.ToString().Equals(str, StringComparison.OrdinalIgnoreCase)).ToList();
                     }
 
@@ -150,14 +150,10 @@ namespace StocareJocurilor
 
         public void AddJoc(Joc joc)
         {
-            List<Joc> Jocuri = GetJocuri();
             joc.setInternalId(GetNextIdJoc());
-            Jocuri.Add(joc);
 
-            using(StreamWriter fisier = new StreamWriter(denFisier, false))
-                foreach(Joc j in Jocuri)
-                    fisier.WriteLine(j.FormatareJoculuiInStr());
-
+            using(StreamWriter fisier = new StreamWriter(denFisier, true))
+                fisier.WriteLine(joc.FormatareJoculuiInStr());
         }
 
         public bool RemoveJoc(string denumirea)
