@@ -339,13 +339,13 @@ namespace WPF
             btnModificaXAML.IsEnabled                  = aprins;
             ModifJoacaPretTextBox.IsEnabled            = aprins;
             ModifJoacaDenumireaTextBox.IsEnabled       = aprins;
-            ModifJoacaDezvoltatoriListBox.IsEnabled = aprins;
-            ModifJoacaEditoriListBox.IsEnabled      = aprins;
+            ModifJoacaDezvoltatoriListBox.IsEnabled    = aprins;
+            ModifJoacaEditoriListBox.IsEnabled         = aprins;
             ModifJoacaGenreTextBox.IsEnabled           = aprins;
             ModifJoacaRateTextBox.IsEnabled            = aprins;
-            ModifJoacaReleaseDataListBox.IsEnabled            = aprins;
-            ModifJoacaVarstaListBox.IsEnabled       = aprins;
-            ModifJoacaPlatformeListBox.IsEnabled    = aprins;
+            ModifJoacaReleaseDataListBox.IsEnabled     = aprins;
+            ModifJoacaVarstaListBox.IsEnabled          = aprins;
+            ModifJoacaPlatformeListBox.IsEnabled       = aprins;
             ModifJoacaEsteDispobinilCheckBox.IsEnabled = aprins;
         }
 
