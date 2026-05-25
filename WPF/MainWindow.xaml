@@ -8,24 +8,28 @@
         Title="Catalog de Jocuri" Height="800" Width="1200"
         WindowStyle="SingleBorderWindow"
         WindowState="Maximized"
-        Background="Bisque">
+        Background="#F7F7F7">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Background="Beige">
+        <StackPanel Background="#2C2C2C">
             <StackPanel.Resources>
                 <Style TargetType="Button">
-                    <Setter Property="Margin" Value="5, 5, 5, 5"/>
+                    <Setter Property="Margin" Value="5,5,5,5"/>
                     <Setter Property="Height" Value="50"/>
+                    <Setter Property="Background" Value="#3D3D3D"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="FontSize" Value="13"/>
                 </Style>
             </StackPanel.Resources>
-            <Button Content="Administrarea Jocurilor" Click="btnMeniuAdministrJocuri_Click"/>
+            <Button Content="Adaugarea Manuala" Click="btnMeniuAdministrJocuri_Click"/>
             <Button Content="Cauta" Click="btnMeniuCautareJocuri_Click"/>
             <Button Content="Modificare" Click="btnMeniuModificareJoc_Click"/>
             <Button Content="Cautare online" Click="btnMeniuCautareOnlineJoc_Click"/>
-            <Button Content="Afisarea grafica a preturilor" Click="btnMeniuAfisareaPreturilor_Click"/>
+            <Button Content="Afisarea grafica a preturilor(WIP)" Click="btnMeniuAfisareaPreturilor_Click"/>
         </StackPanel>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
@@ -166,7 +170,7 @@
                 RowHeight="26"
                 GridLinesVisibility="All"
                 HeadersVisibility="Column"
-                AlternatingRowBackground="#F5F5F5"
+                AlternatingRowBackground="#F0F0F0"
                 CanUserAddRows="False"
                 CanUserDeleteRows="False"
                 IsReadOnly="True"
@@ -231,7 +235,7 @@
                            RowHeight="26"
                            GridLinesVisibility="All"
                            HeadersVisibility="Column"
-                           AlternatingRowBackground="#F5F5F5"
+                           AlternatingRowBackground="#F0F0F0"
                            CanUserAddRows="False"
                            CanUserDeleteRows="False"
                            IsReadOnly="True"
@@ -260,7 +264,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+                <Label Content="Modificarea Jocului" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold" Grid.Row="0"/>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center">
                     <TextBlock Text="Denumirea: "/>
                     <TextBox 
                             x:Name="ModifJoacaDenumireaTextBox" 
@@ -269,7 +274,7 @@
                             Text="{Binding JocCurent.Denumirea, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock x:Name="ErrModifDenumirea" Text="" Foreground="Crimson" Visibility="Collapsed"/>
                 </StackPanel>
-                <Grid Grid.Row="1" HorizontalAlignment="Center">
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
@@ -370,7 +375,7 @@
                             IsChecked="{Binding JocCurent.EsteDisponibil, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </Grid>
-                <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="10">
+                <StackPanel Grid.Row="3" HorizontalAlignment="Center" Margin="10">
                     <Button x:Name="btnModificaXAML" Content="Modifica" Click="btnModificareaJocului_Click" Height="45" Width="200" IsEnabled="False"/>
                     <TextBlock x:Name="btnRezultatModif" Text="" Foreground="Crimson" Visibility="Collapsed"/>
                 </StackPanel>
