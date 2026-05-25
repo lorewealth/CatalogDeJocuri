@@ -23,6 +23,7 @@ namespace WPF.Validatori
             else
             {
                 ErrTextBlock.Visibility = Visibility.Visible;
+                ErrTextBlock.Foreground = Brushes.Crimson;
                 ErrTextBlock.Text = Mesaj;
             }
         }

@@ -1,15 +1,18 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
+using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using StocareJocurilor;
+using System.Windows.Media.Imaging;
 using CatalogDeJocuri;
+using Cautare_API;
 using DespreJoc;
 using DespreJoc.Enums;
+using StocareJocurilor;
 using WPF.Validatori;
-using System.Globalization;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Collections.ObjectModel;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WPF
 {
@@ -32,6 +35,8 @@ namespace WPF
                 OnPropertyChanged();
             }
         }
+
+        static GestionareCache grCache = new();
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyDen = null)
@@ -108,18 +113,23 @@ namespace WPF
             dgJocuri.Visibility = Visibility.Visible;
             ModificareMeniuPanel.Visibility = Visibility.Collapsed;
             Rezultat.Visibility = Visibility.Collapsed;
+            CautareOnlineMeniuPanel.Visibility = Visibility.Collapsed;
+
             AfisareJocuri();
             StergeInputAdaugare();
-            InputModificare(false);
+            DezvEditListBoxInitializare();
+            ErrRezOnliCaut.Visibility = Visibility.Collapsed;
         }
-        
+
         private void btnMeniuCautareJocuri_Click(object sender, RoutedEventArgs e)
         {
             AdministJocPanel.Visibility = Visibility.Collapsed;
             dgJocuri.Visibility= Visibility.Collapsed;
             ModificareMeniuPanel.Visibility = Visibility.Collapsed;
+            CautareOnlineMeniuPanel.Visibility = Visibility.Collapsed;
             CautareJoculPanel.Visibility = Visibility.Visible;
-            InputModificare(false);
+
+            ErrRezOnliCaut.Visibility = Visibility.Collapsed;
         }
 
         private void btnMeniuModificareJoc_Click(object sender, RoutedEventArgs e)
@@ -129,6 +139,7 @@ namespace WPF
             dgJocuriGasiti.Visibility = Visibility.Collapsed;
             CautareJoculPanel.Visibility = Visibility.Collapsed;
             ModificareMeniuPanel.Visibility = Visibility.Visible;
+            CautareOnlineMeniuPanel.Visibility = Visibility.Collapsed;
 
             ModifJoacaVarstaListBox.ItemsSource = Enum.GetValues(typeof(RatingVarsta));
             ModifJoacaPlatformeListBox.ItemsSource = Enum.GetValues(typeof(PlatformeDisponibile));
@@ -138,6 +149,24 @@ namespace WPF
 
             AfisareJocuri();
             StergeInputModificare();
+            DezvEditListBoxInitializare();
+            InputModificare(false);
+            ErrRezOnliCaut.Visibility = Visibility.Collapsed;
+        }
+
+        private void btnMeniuCautareOnlineJoc_Click(object sender, RoutedEventArgs e)
+        {
+            AdministJocPanel.Visibility = Visibility.Collapsed;
+            dgJocuriGasiti.Visibility = Visibility.Collapsed;
+            CautareJoculPanel.Visibility = Visibility.Collapsed;
+            ModificareMeniuPanel.Visibility = Visibility.Collapsed;
+            CautareOnlineMeniuPanel.Visibility = Visibility.Visible;
+            ResetOutputCautareOnline();
+        }
+
+        private void btnMeniuAfisareaPreturilor_Click(object sender, RoutedEventArgs e)
+        {
+            // de impl.
         }
 
         private void btnAdaugaJoc_Click(object sender, RoutedEventArgs e)
@@ -284,6 +313,7 @@ namespace WPF
             StergeInputModificare();
             AfisareJocuri();
             InputModificare(false);
+            JocCurent = null;
         }
 
         private void btnAdaugaEditorListBox_Click(object sender, RoutedEventArgs e)
@@ -298,6 +328,67 @@ namespace WPF
             if (!AddDezvEditListBoxVal.Validare(AdaugaDezvoltatoriTextBox, ErrDezvoltatori, DezvoltatoriLST, dez => dez.Denumirea, "dezvoltator")) return;
             DezvoltatoriLST.Add(new Dezvoltator(AdaugaDezvoltatoriTextBox.Text));
             AdaugaDezvoltatoriTextBox.Text = "";
+        }
+
+        private async void btnCautareOnlineJoc_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ValidatorCautareOnline.ValidareCautare(OnlineDenumireaJocTextBox, ErrRezOnliCaut, JocCurent)) return;
+
+            Joc jocCache = null;
+            if (grCache.existaInCache(OnlineDenumireaJocTextBox.Text, ref jocCache))
+                JocCurent = jocCache;
+            else
+            {
+                Joc jocDinLista = Jocuri.Find(jc => jc.Denumirea.Equals(OnlineDenumireaJocTextBox.Text, StringComparison.OrdinalIgnoreCase));
+                if (jocDinLista != null)
+                {
+                    JocCurent = jocDinLista;
+                    grCache.adaugaInCache(OnlineDenumireaJocTextBox.Text, jocDinLista);
+                }
+                else
+                {
+                    JocCurent = await PrinAPI.Cauta(OnlineDenumireaJocTextBox.Text.ToLower());
+                    if (!ValidatorCautareOnline.ValidareCautare(OnlineDenumireaJocTextBox, ErrRezOnliCaut, JocCurent, true)) return;
+                    grCache.adaugaInCache(OnlineDenumireaJocTextBox.Text, JocCurent);
+                }
+            }
+            OnlineGasitJocDockPanel.Visibility = Visibility.Visible;
+
+            CautareOnlineDenumTextBlock.Text    = "Denumirea: " + JocCurent.Denumirea;
+            CautareOnlineDezvTextBlock.Text     = "Dezvoltatori: " + JocCurent.DezvoltatoriStr;
+            CautareOnlineEditorTextBlock.Text   = "Editori: " + JocCurent.EditoriStr;
+            CautareOnlineGenreTextBlock.Text    = "Genre: " + JocCurent.GenreStr;
+            CautareOnlinePlatfTextBlock.Text    = "Platforme: " + JocCurent.Platforme.ToString();
+            CautareOnlinePretTextBlock.Text     = "Pret: " + JocCurent.Pret.ToString();
+            CautareOnlineIDTextBlock.Text       = "ID: " + JocCurent.ExternalId;
+            CautareOnlineRateTextBlock.Text     = "Rate: " + JocCurent.Rate.ToString();
+            CautareOnlineVarstaTextBlock.Text   = "Rating Varsta: " + JocCurent.Varsta.ToString();
+
+            if (!string.IsNullOrEmpty(JocCurent.ImgUrl))
+            {
+                BitmapImage imag = new BitmapImage();
+                imag.BeginInit();
+                imag.UriSource = new Uri(JocCurent.ImgUrl);
+                imag.CacheOption = BitmapCacheOption.OnLoad;
+                imag.EndInit();
+                OnlineImagineJocImage.Source = imag;
+            }
+            else OnlineImagineJocImage.Source = null;
+        }
+
+        private void btnAdaugareOnlineJoc_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ValidatorCautareOnline.ValidareAdaugare(JocCurent, Jocuri, ErrRezOnliCaut)) return;
+
+            AdministrJocuri.AddJoc(JocCurent);
+            ErrRezOnliCaut.Text = "Joaca a fost adaugata cu succes!";
+            ErrRezOnliCaut.Foreground = Brushes.Green;
+            ErrRezOnliCaut.Visibility = Visibility.Visible;
+
+            AfisareJocuri();
+            ResetOutputCautareOnline();
+            JocCurent = null;
+
         }
 
         //metoda de a sterge input-uri vechi
@@ -333,6 +424,21 @@ namespace WPF
             ModifJoacaDezvoltatoriListBox.SelectedItems.Clear();
             ModifJoacaEditoriListBox.SelectedItems.Clear();
 
+        }
+        private void ResetOutputCautareOnline()
+        {
+            OnlineGasitJocDockPanel.Visibility = Visibility.Collapsed;
+            OnlineDenumireaJocTextBox.Text      = "";
+            CautareOnlineIDTextBlock.Text       = "ID: ";
+            CautareOnlineDenumTextBlock.Text    = "Denumirea: ";
+            CautareOnlinePretTextBlock.Text     = "Pret: ";
+            CautareOnlineRateTextBlock.Text     = "Rate: ";
+            CautareOnlineGenreTextBlock.Text    = "Genre: ";
+            CautareOnlineDezvTextBlock.Text     = "Dezvoltatori: ";
+            CautareOnlineEditorTextBlock.Text   = "Editori: ";
+            CautareOnlinePlatfTextBlock.Text    = "Platforme: ";
+            CautareOnlineVarstaTextBlock.Text   = "Varsta: ";
+            OnlineImagineJocImage.Source        = null;
         }
         private void InputModificare(bool aprins)
         {

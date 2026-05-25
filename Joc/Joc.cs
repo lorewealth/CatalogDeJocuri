@@ -9,7 +9,7 @@ namespace DespreJoc
     {
         //variabile
         public int InternalId { get; private set; }
-        //public int ExternalId { get; private set; }
+        public string ExternalId { get; private set; }
         public string Denumirea { get; set; }
         public double Pret { get; set; }
         public string PretStr
@@ -75,21 +75,24 @@ namespace DespreJoc
         public RatingVarsta Varsta { get; set; }
         public DateTime ReleaseData { get; set; }
         public bool EsteDisponibil { get; set; }
+        public string ImgUrl { get; set; }
 
         //constante
         public const char SEPARATOR_PRINCIPAL_FISIER = ';';
         private const char SEPARATOR_SECUNDAR_FISIER = '|';
         private const int INTERNAL_ID = 0;
-        public const int DENUMIREA = 1;
-        private const int PRETUL = 2;
-        private const int RATING = 3;
-        private const int GENRE = 4;
-        private const int PLATFORME = 5;
-        private const int DEZVOLTATORI = 6;
-        private const int EDITORI = 7;
-        private const int VARSTA = 8;
-        private const int RELEASE_DATA = 9;
-        private const int ESTE_DISPONIBIL = 10;
+        private const int EXTERNAL_ID = 1;
+        public const int DENUMIREA = 2;
+        private const int PRETUL = 3;
+        private const int RATING = 4;
+        private const int GENRE = 5;
+        private const int PLATFORME = 6;
+        private const int DEZVOLTATORI = 7;
+        private const int EDITORI = 8;
+        private const int VARSTA = 9;
+        private const int RELEASE_DATA = 10;
+        private const int ESTE_DISPONIBIL = 11;
+        private const int IMG_URL = 12;
 
         public const double RATE_MIN = 1;
         public const double RATE_MAX = 10;
@@ -100,7 +103,7 @@ namespace DespreJoc
         public void setInternalId(int id) { InternalId = id; }
 
         //constructor
-        public Joc(string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<Editor> Editori, List<Dezvoltator> Dezvoltatori, double Rate, RatingVarsta RatingVarsta, DateTime ReleaseData, bool EsteDisponibil)
+        public Joc(string Denumirea, double Pret, List<string> Genre, PlatformeDisponibile Platforme, List<Editor> Editori, List<Dezvoltator> Dezvoltatori, double Rate, RatingVarsta RatingVarsta, DateTime ReleaseData, bool EsteDisponibil = true, string ExternalId = "null", string ImgUrl = "null")
         {
             this.Denumirea = Denumirea;
             this.Pret = Pret;
@@ -112,6 +115,8 @@ namespace DespreJoc
             this.Varsta = RatingVarsta;
             this.ReleaseData = ReleaseData;
             this.EsteDisponibil = EsteDisponibil;
+            this.ExternalId = ExternalId;
+            this.ImgUrl = ImgUrl;
         }
 
         public Joc(string linieStr)
@@ -119,10 +124,12 @@ namespace DespreJoc
             List<string> date = linieStr.Split(SEPARATOR_PRINCIPAL_FISIER).ToList();
 
             this.InternalId = Convert.ToInt32(date[INTERNAL_ID]);
+            this.ExternalId = date[EXTERNAL_ID].Trim();
             this.Denumirea = date[DENUMIREA].Trim();
             this.Pret = Convert.ToDouble(date[PRETUL]);
             this.Rate = Convert.ToDouble(date[RATING]);
             this.Genre = date[GENRE].Split(SEPARATOR_SECUNDAR_FISIER).ToList();
+            this.ImgUrl = date[IMG_URL].Trim();
 
             foreach(string dezv in date[DEZVOLTATORI].Split(SEPARATOR_SECUNDAR_FISIER))
                 this.Dezvoltatori.Add(new Dezvoltator(dezv));
@@ -148,8 +155,9 @@ namespace DespreJoc
 
             string sPlatforme = string.Join(SEPARATOR_SECUNDAR_FISIER, platformeFormatate); 
             
-            string formatFinal = string.Format("{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}{0}{8}{0}{9}{0}{10}{0}{11}", SEPARATOR_PRINCIPAL_FISIER,
+            string formatFinal = string.Format("{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}{0}{8}{0}{9}{0}{10}{0}{11}{0}{12}{0}{13}", SEPARATOR_PRINCIPAL_FISIER,
                                                 InternalId.ToString(),//{1}
+                                                ExternalId.ToString(),
                                                 Denumirea ?? "NECUNOSCUT",
                                                 Pret.ToString() ?? "0.0",
                                                 Rate.ToString() ?? "0.0",
@@ -159,7 +167,8 @@ namespace DespreJoc
                                                 sEditori ?? "NECUNOSCUT",
                                                 Varsta.ToString() ?? "PEGI3",
                                                 ReleaseData.ToString("yyyy.MM.dd") ?? "NECUNOSCUT",
-                                                EsteDisponibil);//{11}
+                                                EsteDisponibil,
+                                                ImgUrl);//{13}
             return formatFinal;
         }
 
