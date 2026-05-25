@@ -10,8 +10,11 @@ namespace DespreJoc.Enums
     public enum PlatformeDisponibile
     {
         Steam = 1 << 0,
-        EpicGames = 1 << 1,
+        EpicGamesStore = 1 << 1,
         GOG = 1 << 2,
-        itchIo = 1 << 3
+        MicrosoftStore = 1 << 3,
+        UbisoftStore = 1 << 4,
+        Blizzard = 1 << 5,
+        EAStore = 1 << 6,
     }
 }

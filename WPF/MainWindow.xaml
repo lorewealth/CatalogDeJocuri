@@ -24,6 +24,8 @@
             <Button Content="Administrarea Jocurilor" Click="btnMeniuAdministrJocuri_Click"/>
             <Button Content="Cauta" Click="btnMeniuCautareJocuri_Click"/>
             <Button Content="Modificare" Click="btnMeniuModificareJoc_Click"/>
+            <Button Content="Cautare online" Click="btnMeniuCautareOnlineJoc_Click"/>
+            <Button Content="Afisarea grafica a preturilor" Click="btnMeniuAfisareaPreturilor_Click"/>
         </StackPanel>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
@@ -71,9 +73,12 @@
                             <ComboBox.Items>
                                 <ComboBoxItem Content="-- Selecteaza --"/>
                                 <CheckBox Content="Steam" Tag="Steam"/>
-                                <CheckBox Content="Epic Games Store" Tag="EpicGames"/>
+                                <CheckBox Content="Epic Games Store" Tag="EpicGamesStore"/>
                                 <CheckBox Content="GOG" Tag="GOG"/>
-                                <CheckBox Content="itch.io" Tag="itchIo"/>
+                                <CheckBox Content="Microsoft Store" Tag="MicrosoftStore"/>
+                                <CheckBox Content="Ubisoft Store" Tag="UbisoftStore"/>
+                                <CheckBox Content="Blizzard" Tag="Blizzard"/>
+                                <CheckBox Content="EA Store" Tag="EAStore"/>
                             </ComboBox.Items>
                         </ComboBox>
                         <TextBlock x:Name="ErrPlatforme" Text="Platforme Invalide" Foreground="Crimson" Visibility="Collapsed"/>
@@ -171,6 +176,7 @@
                 >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID"           Width="Auto" Binding="{Binding InternalId}"/>
+                    <DataGridTextColumn Header="External ID"  Width="Auto" Binding="{Binding ExternalId}"/>
                     <DataGridTextColumn Header="Denumirea"    Width="Auto" Binding="{Binding Denumirea}"/>
                     <DataGridTextColumn Header="Pret"         Width="Auto" Binding="{Binding PretStr}"/>
                     <DataGridTextColumn Header="Genre"        Width="Auto" Binding="{Binding GenreStr}"/>
@@ -369,6 +375,51 @@
                     <TextBlock x:Name="btnRezultatModif" Text="" Foreground="Crimson" Visibility="Collapsed"/>
                 </StackPanel>
             </Grid>
+            <!-- Cautare online panel-->
+            <Grid x:Name="CautareOnlineMeniuPanel" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+                    <Label Content="Cautarea jocului online" FontSize="30" FontWeight="Bold"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="5">
+                    <Label Content="Denumirea jocului: "/>
+                    <TextBox x:Name="OnlineDenumireaJocTextBox"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style TargetType="Button">
+                                <Setter Property="Margin" Value="5"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <Button Content="Cauta" Click="btnCautareOnlineJoc_Click" Width="100" Height="25"/>
+                        <Button Content="Adauga" Click="btnAdaugareOnlineJoc_Click" Width="100" Height="25"/>
+                    </StackPanel>
+                    <TextBlock x:Name="ErrRezOnliCaut" Foreground="Crimson" Visibility="Collapsed"/>
+                </StackPanel>
+                <DockPanel x:Name="OnlineGasitJocDockPanel" Grid.Row="3" Visibility="Visible">
+                    <Image x:Name="OnlineImagineJocImage" Width="200" HorizontalAlignment="Left" Margin="5"/>
+                    <StackPanel>
+                        <TextBlock x:Name="CautareOnlineIDTextBlock"     Text="ID:"/>
+                        <TextBlock x:Name="CautareOnlineDenumTextBlock"  Text="Denumirea:"/>
+                        <TextBlock x:Name="CautareOnlinePretTextBlock"   Text="Pret:"/>
+                        <TextBlock x:Name="CautareOnlineRateTextBlock"   Text="Rate:"/>
+                        <TextBlock x:Name="CautareOnlineGenreTextBlock"  Text="Genre:"/>
+                        <TextBlock x:Name="CautareOnlineDezvTextBlock"   Text="Dezvoltatori:"/>
+                        <TextBlock x:Name="CautareOnlineEditorTextBlock" Text="Editori:"/>
+                        <TextBlock x:Name="CautareOnlinePlatfTextBlock"  Text="Platforme:"/>
+                        <TextBlock x:Name="CautareOnlineVarstaTextBlock" Text="Varsta:"/>
+                    </StackPanel>
+                </DockPanel>
+            </Grid>
+            <!-- Afisarea grafica a preturilor panel-->
+            
         </Grid>
     </Grid>
 </Window>

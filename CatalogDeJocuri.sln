@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StocareJocurilor", "Stocare
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF\WPF.csproj", "{68245C1E-B56E-9570-FC88-BA8BDDA8077B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cautare API", "Cautare API\Cautare API.csproj", "{EB6E8901-1F62-4E61-9B68-080AD095E932}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{68245C1E-B56E-9570-FC88-BA8BDDA8077B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68245C1E-B56E-9570-FC88-BA8BDDA8077B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68245C1E-B56E-9570-FC88-BA8BDDA8077B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB6E8901-1F62-4E61-9B68-080AD095E932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB6E8901-1F62-4E61-9B68-080AD095E932}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB6E8901-1F62-4E61-9B68-080AD095E932}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB6E8901-1F62-4E61-9B68-080AD095E932}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
