@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DespreJoc.Enums
 {
-    public enum Categorii
+    public enum Categorii : byte
     {
         Genre = 1,
         Dezvoltatori = 2,

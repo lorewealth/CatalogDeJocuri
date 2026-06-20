@@ -9,7 +9,7 @@ namespace Cautare_API
 {
     public class PrinAPI
     {
-        private const string Cheie = "13878b9660475725d2ae6f918bef7a49ff190129";
+        private const string Cheie = "";
         static HttpClient Client = new HttpClient();
 
         public static async Task<Joc> Cauta(string denumireCautarii)
@@ -34,7 +34,7 @@ namespace Cautare_API
 
             //preiau url a imaginii jocului
             string imgUrl = string.Empty;
-            if (json.RootElement.GetProperty("assets").TryGetProperty("boxart", out JsonElement boxart))
+            if (json.RootElement.GetProperty("assets").TryGetProperty("boxart", out JsonElement boxart))// de fixat exceptie Object dar vine Array
                 imgUrl = boxart.GetString();
             else if (json.RootElement.GetProperty("assets").TryGetProperty("banner600", out JsonElement banner))
                imgUrl = banner.GetString();
@@ -86,7 +86,7 @@ namespace Cautare_API
             double pret = 0;
             if (esteDisponibil)
             {
-                var dealsArray = json.RootElement[0].GetProperty("deals").EnumerateArray();
+                var dealsArray = json.RootElement[0].GetProperty("deals").EnumerateArray(); // + index out of range
                 var steamDeal = dealsArray.FirstOrDefault(deal =>
                     deal.GetProperty("shop").GetProperty("name").GetString().Equals("Steam", StringComparison.OrdinalIgnoreCase));
 
