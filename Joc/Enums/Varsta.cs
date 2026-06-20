@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DespreJoc.Enums
 {
 
-    public enum RatingVarsta
+    public enum RatingVarsta : byte
     {
         PEGI3 = 1,
         PEGI7 = 2,

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DespreJoc.Enums
 {
     [Flags]
-    public enum PlatformeDisponibile
+    public enum PlatformeDisponibile : byte
     {
         Steam = 1 << 0,
         EpicGamesStore = 1 << 1,
