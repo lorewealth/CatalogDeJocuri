@@ -169,6 +169,11 @@ namespace WPF
             // de impl.
         }
 
+        private void btnMeniuSetari_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void btnAdaugaJoc_Click(object sender, RoutedEventArgs e)
         {
             //valideaza input a userului

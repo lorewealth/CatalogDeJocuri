@@ -10,11 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\CatalogDeJocuri\App.config" Link="App.config" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CatalogDeJocuri\CatalogDeJocuri.csproj" />
     <ProjectReference Include="..\Cautare API\Cautare API.csproj" />
     <ProjectReference Include="..\Joc\DespreJoc.csproj" />
     <ProjectReference Include="..\StocareJocurilor\StocareJocurilor.csproj" />

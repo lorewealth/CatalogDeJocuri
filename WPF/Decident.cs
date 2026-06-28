@@ -1,6 +1,7 @@
 ﻿using System;
 using StocareJocurilor;
 using System.Configuration;
+using System.IO;
 
 namespace CatalogDeJocuri
 {

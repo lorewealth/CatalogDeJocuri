@@ -30,6 +30,7 @@
             <Button Content="Modificare" Click="btnMeniuModificareJoc_Click"/>
             <Button Content="Cautare online" Click="btnMeniuCautareOnlineJoc_Click"/>
             <Button Content="Afisarea grafica a preturilor(WIP)" Click="btnMeniuAfisareaPreturilor_Click"/>
+            <Button Content="Setari(WIP)" Click="btnMeniuSetari_Click"/>
         </StackPanel>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
@@ -425,6 +426,22 @@
             </Grid>
             <!-- Afisarea grafica a preturilor panel-->
             
+            <!-- Setari -->
+            <Grid x:Name="SetariMeniuPanel" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Setari" Grid.Row="0" HorizontalAlignment="Center" FontSize="30"/>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                    <TextBlock Text="Selectati modalitatea salvarii: " FontSize="18"/>
+                    <RadioButton x:Name="rdText" Content="Text" IsChecked="True"/>
+                    <RadioButton x:Name="rdBinar" Content="Binar"/>
+                    <RadioButton x:Name="rdSQL" Content="SQL"/>
+                </StackPanel>
+                <Button Grid.Row="2" Content="Confirm" Width="80" Height="35"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
