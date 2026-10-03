@@ -1,0 +1,54 @@
+<UserControl x:Class="WPF.Views.APIAddingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="900">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Online Search" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="300" Height="28" Margin="4" ToolTip="Game title"/>
+            <ComboBox ItemsSource="{Binding Countries}" SelectedItem="{Binding Country}" Width="70" Height="28" Margin="4"/>
+            <Button Content="Search" Command="{Binding SearchCommand}" Width="90" Height="28" Margin="4"/>
+            <Button Content="Load details" Command="{Binding LoadDetailsCommand}" Width="100" Height="28" Margin="4"/>
+        </StackPanel>
+        <Grid Grid.Row="2" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="2*"/><ColumnDefinition Width="3*"/></Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Results" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <ListBox ItemsSource="{Binding Results}" SelectedItem="{Binding SelectedResult}" DisplayMemberPath="Name" MinHeight="250"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="18,0,0,0" Visibility="{Binding HasSelectedGame, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="{Binding SelectedGame.Name}" FontSize="22" FontWeight="Bold" TextWrapping="Wrap"/>
+                <Image Source="{Binding SelectedGame.ImgUrl}" Height="140" Stretch="Uniform" HorizontalAlignment="Left" Margin="0,8"/>
+                <TextBlock Text="{Binding SelectedGame.Price, StringFormat=Price: {0:C}}"/>
+                <TextBlock Text="{Binding SelectedGame.GenresStr, StringFormat=Genres: {0}}" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding SelectedGame.PublishersStr, StringFormat=Publishers: {0}}" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding SelectedGame.DevelopersStr, StringFormat=Developers: {0}}" TextWrapping="Wrap"/>
+                <TextBlock Text="Age ratings" FontWeight="SemiBold" Margin="0,6,0,2"/>
+                <ItemsControl ItemsSource="{Binding AgeRatings}">
+                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate><DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,4">
+                            <Image Source="{Binding BadgeImage}" Width="42" Height="42" Stretch="Uniform" Margin="0,0,4,0"/>
+                            <TextBlock Text="{Binding Label}" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="150"/>
+                        </StackPanel>
+                    </DataTemplate></ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Text="{Binding SelectedGame.ScoresStr, StringFormat=Scores: {0}}" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding SelectedGame.Stores, StringFormat=Stores: {0}}" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding SelectedGame.ReleaseDate, StringFormat=Release date: {0:d}}"/>
+                <Button Content="Add to Catalog" Command="{Binding AddGameCommand}" Width="125" Height="32" Margin="0,12,0,0" HorizontalAlignment="Left"/>
+            </StackPanel>
+        </Grid>
+        <StackPanel Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,4">
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Crimson" Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <TextBlock Text="{Binding SuccessMessage}" Foreground="ForestGreen" Visibility="{Binding HasSuccess, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

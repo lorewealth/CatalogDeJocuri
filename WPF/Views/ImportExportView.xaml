@@ -1,0 +1,35 @@
+<UserControl x:Class="WPF.Views.ImportExportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Margin="30">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <TextBlock Text="Import / Export" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold" Margin="0,0,0,24"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+            <Border Grid.Column="0" BorderBrush="#B9C7E8" BorderThickness="1" CornerRadius="5" Padding="20" Margin="0,0,10,0">
+                <StackPanel>
+                    <TextBlock Text="Export catalog" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="Creates a .gcat archive containing all local games." Foreground="DimGray" TextWrapping="Wrap" Margin="0,8,0,16"/>
+                    <TextBlock Text="Data format"/>
+                    <ComboBox ItemsSource="{Binding ExportFormats}" SelectedItem="{Binding SelectedFormat}" Margin="0,4,0,16"/>
+                    <Button Content="Export catalog" Command="{Binding ExportCommand}" Height="34" Width="130" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="1" BorderBrush="#B9E0C3" BorderThickness="1" CornerRadius="5" Padding="20" Margin="10,0,0,0">
+                <StackPanel>
+                    <TextBlock Text="Import catalog" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="Imports games from a .gcat archive. Games already in the catalog are skipped." Foreground="DimGray" TextWrapping="Wrap" Margin="0,8,0,16"/>
+                    <Button Content="Choose .gcat file" Command="{Binding ImportCommand}" Height="34" Width="130" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <StackPanel Grid.Row="2" Margin="0,16,0,0">
+            <TextBlock Text="Working..." Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="DimGray"/>
+            <TextBlock Text="{Binding ErrorMessage}" Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="Crimson" TextWrapping="Wrap"/>
+            <TextBlock Text="{Binding SuccessMessage}" Visibility="{Binding HasSuccess, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="ForestGreen" TextWrapping="Wrap"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,39 @@
+<UserControl x:Class="WPF.Views.ModdifyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignHeight="620" d:DesignWidth="900">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <TextBlock Text="Edit Game" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <TextBlock Text="Select a game, change its information, then save. Ratings are preserved; price history is handled separately."
+                       Foreground="DimGray" HorizontalAlignment="Center" Margin="0,5,0,16" TextWrapping="Wrap"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,14">
+                <TextBlock Text="Game" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <ComboBox ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame}" DisplayMemberPath="Name" Width="360"/>
+            </StackPanel>
+            <Grid IsEnabled="{Binding HasSelection}">
+                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="6">
+                    <TextBlock Text="Name"/><TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Price" Margin="0,10,0,0"/><TextBox Text="{Binding PriceText, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Genres (comma-separated)" Margin="0,10,0,0"/><TextBox Text="{Binding GenresText, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Publishers (comma-separated)" Margin="0,10,0,0"/><TextBox Text="{Binding PublishersText, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Developers (comma-separated)" Margin="0,10,0,0"/><TextBox Text="{Binding DevelopersText, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="6">
+                    <TextBlock Text="Release date"/><DatePicker SelectedDate="{Binding ReleaseDate}"/>
+                    <CheckBox Content="Available" IsChecked="{Binding IsAvailable}" Margin="0,10,0,0"/>
+                    <TextBlock Text="Stores" FontWeight="SemiBold" Margin="0,10,0,3"/>
+                    <ItemsControl ItemsSource="{Binding StoreOptions}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel><ItemsControl.ItemTemplate><DataTemplate><CheckBox Content="{Binding DisplayName}" IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="0,0,12,4"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                    <TextBlock Text="Operating systems" FontWeight="SemiBold" Margin="0,10,0,3"/>
+                    <ItemsControl ItemsSource="{Binding OperatingSystemOptions}"><ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel><ItemsControl.ItemTemplate><DataTemplate><CheckBox Content="{Binding DisplayName}" IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="0,0,12,4"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                </StackPanel>
+            </Grid>
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Crimson" Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="6" TextWrapping="Wrap"/>
+            <TextBlock Text="{Binding SuccessMessage}" Foreground="ForestGreen" Visibility="{Binding HasSuccess, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="6"/>
+            <Button Content="Save changes" Command="{Binding SaveCommand}" Width="130" Height="34" HorizontalAlignment="Center" Margin="6"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
