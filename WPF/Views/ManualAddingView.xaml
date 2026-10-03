@@ -1,0 +1,40 @@
+<UserControl x:Class="WPF.Views.ManualAddingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="900">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <TextBlock Text="Add Game" HorizontalAlignment="Center" FontSize="30" FontWeight="Bold" Margin="0,0,0,16"/>
+            <TextBlock Text="Separate multiple genres, publishers, and developers with commas." Foreground="DimGray" Margin="0,0,0,12"/>
+            <UniformGrid Columns="2">
+                <StackPanel Margin="5"><TextBlock Text="Name"/><TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/></StackPanel>
+                <StackPanel Margin="5"><TextBlock Text="Price"/><TextBox Text="{Binding PriceText}"/></StackPanel>
+                <StackPanel Margin="5"><TextBlock Text="Genres"/><TextBox Text="{Binding GenresText}"/></StackPanel>
+                <StackPanel Margin="5"><TextBlock Text="Publishers"/><TextBox Text="{Binding PublishersText}"/></StackPanel>
+                <StackPanel Margin="5"><TextBlock Text="Developers"/><TextBox Text="{Binding DevelopersText}"/></StackPanel>
+                <StackPanel Margin="5"><TextBlock Text="Score (optional, 0–10)"/><TextBox Text="{Binding ScoreText}"/></StackPanel>
+                <StackPanel Margin="5"><TextBlock Text="Release date"/><DatePicker SelectedDate="{Binding ReleaseDate}"/></StackPanel>
+                <StackPanel Margin="5"><TextBlock Text="Age rating"/><ComboBox ItemsSource="{Binding AgeRatingOptions}" SelectedItem="{Binding SelectedAgeRating}"/></StackPanel>
+            </UniformGrid>
+            <CheckBox Content="Available" IsChecked="{Binding IsAvailable}" Margin="5"/>
+            <Grid Margin="0,8">
+                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="5"><TextBlock Text="Available on" FontWeight="SemiBold"/>
+                    <ItemsControl ItemsSource="{Binding StoreOptions}"><ItemsControl.ItemTemplate><DataTemplate>
+                        <CheckBox Content="{Binding DisplayName}" IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
+                    </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="5"><TextBlock Text="Supported operating systems" FontWeight="SemiBold"/>
+                    <ItemsControl ItemsSource="{Binding OperatingSystemOptions}"><ItemsControl.ItemTemplate><DataTemplate>
+                        <CheckBox Content="{Binding DisplayName}" IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
+                    </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                </StackPanel>
+            </Grid>
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Crimson" Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="5"/>
+            <TextBlock Text="{Binding SuccessMessage}" Foreground="ForestGreen" Visibility="{Binding HasSuccess, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="5"/>
+            <Button Content="Add Game" Command="{Binding AddGameCommand}" Width="120" Height="34" HorizontalAlignment="Center" Margin="5"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

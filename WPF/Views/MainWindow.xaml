@@ -1,0 +1,34 @@
+﻿<Window x:Class="WPF.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:WPF.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
+        Title="Game Catalog" Height="800" Width="1200"
+        WindowStyle="SingleBorderWindow"
+        WindowState="Maximized"
+        Background="#F7F7F7">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- Navigation Panel -->
+        <StackPanel Background="#2C2C2C" Grid.Row="0" Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style TargetType="RadioButton" BasedOn="{StaticResource NavTabNavigationStyle}"/>
+            </StackPanel.Resources>
+            <RadioButton Content="Home" Command="{Binding HomeNavCommand}" IsChecked="True"/>
+            <RadioButton Content="Manual Adding" Command="{Binding ManualAddNavCommand}"/>
+            <RadioButton Content="Internal Search" Command="{Binding ManualSearchNavCommand}"/>
+            <RadioButton Content="Modify" Command="{Binding ModifyGameNavCommand}"/>
+            <RadioButton Content="Online Search" Command="{Binding OnlineSearchNavCommand}"/>
+            <RadioButton Content="Graph Price(WIP)" Command="{Binding PriceGraphNavCommand}"/>
+            <RadioButton Content="Import/Export" Command="{Binding ImportExportNavCommand}"/>
+        </StackPanel>
+        <!-- Content -->
+        <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}"/>
+    </Grid>
+</Window>
